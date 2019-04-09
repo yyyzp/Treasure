@@ -2,17 +2,39 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="15dp"
+    android:paddingRight="15dp">
 
-    <com.amap.api.maps.TextureMapView
-        android:id="@+id/texture_mapview"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <Button
-        android:id="@+id/btn_add_marker"
-        android:layout_width="100dp"
         android:layout_height="50dp"
+        android:id="@+id/tv_offical_action"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:text="开放活动"
+        android:textColor="#ffffff"
+        android:textSize="26sp" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_below="@+id/tv_offical_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp" />
+
+    <TextView
+        android:id="@+id/tv_create_action"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:text="创建"
         android:layout_alignParentRight="true"
-        android:text="add" />
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:textColor="#ffffff"
+        android:background="@color/colorPrimary"
+        />
 </RelativeLayout>

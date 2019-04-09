@@ -14,7 +14,7 @@
     <!--允许程序读写手机状态和身份-->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
-   <!--用于进行网络定位-->
+    <!--用于进行网络定位-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
     <!--用于访问GPS定位-->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
@@ -35,6 +35,7 @@
     <!--用于申请获取蓝牙信息进行室内定位-->
     <uses-permission android:name="android.permission.BLUETOOTH"></uses-permission>
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"></uses-permission>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -46,12 +47,13 @@
             android:value="f240a2684f6b1e766f35be935344f9e6" />
 
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity android:name=".activity.SearchTreasureActivity" />
+        <activity android:name=".activity.CreateTreasureActivity" />
     </application>
 </manifest>

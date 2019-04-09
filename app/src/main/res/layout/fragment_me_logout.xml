@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/layout_title_bar" />
+
+   <EditText
+       android:id="@+id/ed_account"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="15dp"
+       android:layout_marginRight="15dp"
+       android:layout_marginTop="80dp"
+       android:hint="请输入账号"
+       android:textSize="18sp"
+       android:textColor="#000000"
+       />
+    <EditText
+        android:id="@+id/ed_password"
+        android:inputType="textPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:hint="请输入密码"
+        android:textSize="18sp"
+        android:textColor="#000000"
+        />
+    <TextView
+        android:id="@+id/tv_login"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="30dp"
+        android:background="@color/colorPrimary"
+        android:text="登录"
+        android:textColor="#ffffff"
+        android:textSize="22sp"
+        android:gravity="center"
+        />
+</LinearLayout>

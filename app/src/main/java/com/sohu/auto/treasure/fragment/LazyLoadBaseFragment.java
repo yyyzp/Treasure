@@ -1,4 +1,4 @@
-package com.sohu.auto.treasure;
+package com.sohu.auto.treasure.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

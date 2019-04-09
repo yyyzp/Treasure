@@ -1,4 +1,4 @@
-package com.sohu.auto.treasure;
+package com.sohu.auto.treasure.activity;
 
 
 import android.annotation.SuppressLint;
@@ -10,6 +10,9 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
 
+import com.sohu.auto.treasure.R;
+import com.sohu.auto.treasure.fragment.MeFragment;
+import com.sohu.auto.treasure.fragment.TreasureFragment;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 
@@ -19,8 +22,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 public class MainActivity extends RxAppCompatActivity {
     public static final int TAB_TREASURE_FRAGMENT = 0;
-    public static final int TAB_FIND_FRAGMENT = 1;
-    public static final int TAB_ME_FRAGMENT = 2;
+    public static final int TAB_ME_FRAGMENT = 1;
     private FragmentTabHost mTabHost;
     private TabWidget mTabWidget;
     private String[] mFragmentTags;
@@ -47,10 +49,9 @@ public class MainActivity extends RxAppCompatActivity {
     }
 
     private void initView() {
-        mFragmentTags =new String[]{"挖宝","埋宝","我的"};
+        mFragmentTags =new String[]{"寻宝","我的"};
         mFragments = new Class[]{
                 TreasureFragment.class,
-                FindFragment.class,
                 MeFragment.class
         };
     }
@@ -64,10 +65,6 @@ public class MainActivity extends RxAppCompatActivity {
 
         });
 
-        mTabWidget.getChildTabViewAt(TAB_FIND_FRAGMENT).setOnClickListener(v -> {
-            mTabHost.setCurrentTabByTag(mFragmentTags[TAB_FIND_FRAGMENT]);
-
-        });
         mTabWidget.getChildTabViewAt(TAB_ME_FRAGMENT).setOnClickListener(v -> {
             mTabHost.setCurrentTabByTag(mFragmentTags[TAB_ME_FRAGMENT]);
         });
