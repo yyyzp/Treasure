@@ -112,7 +112,7 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
             @Override
             public void run() {
                 rippleAnimationView.stopRippleAnimation();
-                MarkerDrawer.drawMarkerList(SearchTreasureActivity.this, aMap, CreateTreasureActivity.markerList);
+//                MarkerDrawer.drawMarkerList(SearchTreasureActivity.this, aMap, CreateTreasureActivity.markerList);
 
             }
         }, 2000);
