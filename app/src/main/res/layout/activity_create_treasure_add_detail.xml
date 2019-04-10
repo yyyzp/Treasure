@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.sohu.auto.treasure.widget.SHAutoActionbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:actionbar_type="common"
+        app:actionbar_title="创建寻宝活动"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:padding="10dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="宝藏位置"
+                android:textColor="@color/black"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp">
+
+                <TextView
+                    android:id="@+id/tv_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="this is treasure detail"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/tv_change_location"
+                    android:layout_marginRight="10dp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/cG3"
+                    android:layout_below="@id/tv_location"
+                    android:layout_toLeftOf="@+id/tv_change_location"
+                    android:layout_marginRight="10dp"/>
+
+                <TextView
+                    android:id="@+id/tv_change_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="更改位置" />
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="宝藏文字内容"
+                android:textColor="@color/black"
+                android:layout_marginTop="10dp"/>
+
+            <EditText
+                android:id="@+id/edt_treasure_text"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_marginTop="5dp"
+                style="@style/NormalEditTextStyle"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="宝藏图片内容"
+                android:textColor="@color/black"/>
+
+            <ImageView
+                android:id="@+id/iv_treasure_img"
+                android:layout_width="85dp"
+                android:layout_height="85dp"
+                android:src="@drawable/image_selector_add"
+                android:layout_marginTop="5dp"
+                android:scaleType="centerCrop"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="开设谜题(不设置谜题宝藏可以直接开启)"
+                android:textColor="@color/black"/>
+
+            <EditText
+                android:id="@+id/edt_question_stem"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="请输入题干"
+                style="@style/NormalEditTextStyle"
+                android:gravity="left|center"
+                android:layout_marginTop="5dp"/>
+
+            <EditText
+                android:id="@+id/edt_question_answer"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:hint="请输入正确答案"
+                style="@style/NormalEditTextStyle"
+                android:layout_marginTop="5dp"
+                android:gravity="center|left"/>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

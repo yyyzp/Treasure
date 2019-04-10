@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.sohu.auto.treasure.activity.CreateTreasureActivity;
+import com.sohu.auto.treasure.activity.TreasureLocationActivity;
 import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.activity.SearchTreasureActivity;
 import com.sohu.auto.treasure.adapter.BaseAdapter;
