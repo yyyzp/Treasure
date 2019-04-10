@@ -4,9 +4,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.amap.api.location.DPoint;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.TextureMapView;
@@ -24,24 +22,23 @@ import java.util.List;
  * Created by zhipengyang on 2019/4/9.
  */
 
-public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.OnMyLocationChangeListener {
+public class TreasureLocationActivity extends RxAppCompatActivity implements AMap.OnMyLocationChangeListener {
     TextureMapView mTextureMapView;
     AMap aMap;
-    List<Marker> markerList;
-    LatLng locateLatLng;
-    Button btnSearch;
-    boolean isFirst=true;
+    static List<Marker> markerList;
+    Marker mCenterMarker;
+    Button btnCreate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_treasure_location);
         initView(savedInstanceState);
     }
 
     private void initView(Bundle savedInstanceState) {
         mTextureMapView = findViewById(R.id.texture_mapview);
-        btnSearch = findViewById(R.id.btn_search);
+        btnCreate = findViewById(R.id.btn_create);
         markerList = new ArrayList<>();
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         mTextureMapView.onCreate(savedInstanceState);//初始化地图控制器对象
@@ -53,20 +50,9 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
     }
 
     private void initListener() {
-        btnSearch.setOnClickListener(v -> {
-            MarkerDrawer.drawMarkerList(SearchTreasureActivity.this, aMap, TreasureLocationActivity.markerList);
-        });
-        aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(Marker marker) {
-                locate();
-                LatLng markerLatLng = marker.getPosition();
-                DPoint dPoint = new DPoint(markerLatLng.latitude, markerLatLng.longitude);
-                DPoint dPoint2 = new DPoint(locateLatLng.latitude, locateLatLng.longitude);
-                float distance = MarkerDrawer.calculateLineDistance(dPoint, dPoint2);
-                Toast.makeText(SearchTreasureActivity.this, "开启宝箱  distance   " + distance, Toast.LENGTH_LONG).show();
-                return true;
-            }
+        btnCreate.setOnClickListener(v -> {
+            LatLng latLng = mCenterMarker.getPosition();
+            markerList.add(MarkerDrawer.drawMarker(TreasureLocationActivity.this, aMap, latLng));
         });
     }
 
@@ -74,11 +60,11 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
         MyLocationStyle myLocationStyle;
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);//定位一次，且将视角移动到地图中心点。
-//        myLocationStyle.interval(5000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
+//        myLocationStyle.interval(2000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
         aMap.getUiSettings().setMyLocationButtonEnabled(false);//设置默认定位按钮是否显示，非必需设置。
         aMap.setMyLocationEnabled(true);// 设置为true表示启动显示定位蓝点，false表示隐藏定位蓝点并不进行定位，默认是false。
-        myLocationStyle.showMyLocation(true);//设置是否显示定位小蓝点，用于满足只想使用定位，不想使用定位小蓝点的场景，设置false以后图面上不再有定位蓝点的概念，但是会持续回调位置信息。
+        myLocationStyle.showMyLocation(false);//设置是否显示定位小蓝点，用于满足只想使用定位，不想使用定位小蓝点的场景，设置false以后图面上不再有定位蓝点的概念，但是会持续回调位置信息。
         aMap.setOnMyLocationChangeListener(this);
     }
 
@@ -109,12 +95,10 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
 
     @Override
     public void onMyLocationChange(Location location) {
-        locateLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-        if(isFirst){
-            aMap.moveCamera(CameraUpdateFactory.newLatLng(locateLatLng));
-            aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
-            isFirst=false;
-        }
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        aMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+        mCenterMarker = MarkerDrawer.drawCenterMarker(this, aMap, latLng);
         Log.d("yzp", "  " + location.getLatitude() + "    " + location.getLongitude());
     }
 }

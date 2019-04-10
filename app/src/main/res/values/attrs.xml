@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <declare-styleable name="SHAutoActionBar">
+        <attr name="actionbar_title" format="string|reference" />
+        <attr name="actionbar_left_iv" format="reference" />
+        <attr name="actionbar_left_tv" format="reference" />
+        <attr name="actionbar_right_tv" format="reference" />
+        <attr name="actionbar_right_iv" format="reference" />
+        <attr name="actionbar_right_1_iv" format="reference" />
+        <attr name="actionbar_type">
+            <enum name="common" value="0" />
+            <enum name="common_web" value="1" />
+            <enum name="transparent_share" value="2" />
+            <enum name="download_pic" value="3" />
+            <enum name="common_from_bottom" value="4" />
+            <enum name="right_icon" value="5" />
+            <enum name="download_pic_share" value="6" />
+        </attr>
+    </declare-styleable>
+
+</resources>
