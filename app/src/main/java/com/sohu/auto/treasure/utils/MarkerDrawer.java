@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import com.amap.api.location.CoordinateConverter;
 import com.amap.api.location.DPoint;
 import com.amap.api.maps.AMap;
+import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
@@ -29,7 +30,7 @@ public class MarkerDrawer {
         markerOption.position(latLng);
         markerOption.title("宝藏");
         markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                .decodeResource(context.getResources(), R.mipmap.ic_launcher)));
+                .decodeResource(context.getResources(), R.mipmap.ic_treasure)));
         return aMap.addMarker(markerOption);
     }
 
@@ -42,7 +43,7 @@ public class MarkerDrawer {
             markerOption.position(latLng);
             markerOption.title("宝藏");
             markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                    .decodeResource(context.getResources(), R.mipmap.ic_launcher)));
+                    .decodeResource(context.getResources(), R.mipmap.ic_treasure)));
             list.add(markerOption);
         }
         aMap.addMarkers(list, false);
@@ -53,13 +54,13 @@ public class MarkerDrawer {
         markerOption.position(latLng);
         markerOption.title("宝藏");
         markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                .decodeResource(activity.getResources(), R.mipmap.ic_launcher_round)));
+                .decodeResource(activity.getResources(), R.mipmap.ic_locate)));
         Marker marker = aMap.addMarker(markerOption);
         marker.setPositionByPixels(DeviceInfo.getScreenWidth(activity) / 2, DeviceInfo.getScreenHeight(activity) / 2);
         return marker;
     }
 
-    public static float calculateLineDistance(DPoint sourceLatLng, DPoint destLatLng) {
-        return CoordinateConverter.calculateLineDistance(sourceLatLng, destLatLng);
+    public static float calculateLineDistance(LatLng locateLatLng,LatLng markerLatLng) {
+        return AMapUtils.calculateLineDistance(locateLatLng, markerLatLng);
     }
 }

@@ -55,5 +55,6 @@
         </activity>
         <activity android:name=".activity.SearchTreasureActivity" />
         <activity android:name=".activity.CreateTreasureActivity" />
+        <activity android:name=".activity.OpenTreasureActivity" />
     </application>
 </manifest>
