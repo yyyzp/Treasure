@@ -26,15 +26,16 @@
 
     <TextView
         android:id="@+id/tv_create_action"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:text="创建"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"
         android:layout_marginRight="10dp"
+        android:padding="5dp"
         android:gravity="center"
-        android:textColor="#ffffff"
-        android:background="@color/colorPrimary"
+        android:textColor="@color/cG1"
+        android:background="@drawable/shape_circle_button"
         />
 </RelativeLayout>

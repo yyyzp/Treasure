@@ -1,13 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@android:id/tabhost"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/layout_title_bar" />
-
+    <com.sohu.auto.treasure.widget.SHAutoActionbar
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:actionbar_type="common"
+        app:actionbar_title="开启宝藏"/>
     <TextView
         android:id="@+id/tv_question"
         android:layout_width="match_parent"
@@ -27,7 +32,7 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="30dp"
         android:padding="8dp"
-        android:background="@drawable/shape_rec_radius4dp_stroke1dp"
+        android:background="@drawable/shape_edit_text"
         android:textSize="20sp"
         tools:text="搜狐新闻，准确可靠" />
 
@@ -38,7 +43,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="40dp"
-        android:background="@drawable/shape_rec_radius4dp_solid3f51b5"
+        android:background="@drawable/shape_button"
         android:text="提交"
         android:textColor="#ffffff"
         android:textSize="26sp"

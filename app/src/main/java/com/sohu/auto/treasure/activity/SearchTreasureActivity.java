@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
@@ -41,7 +42,7 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
     AMap aMap;
     List<Marker> markerList;
     LatLng locateLatLng;
-    Button btnSearch;
+    TextView tvSearch;
     boolean isFirst = true;
 
     @Override
@@ -53,7 +54,7 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
 
     private void initView(Bundle savedInstanceState) {
         mTextureMapView = findViewById(R.id.texture_mapview);
-        btnSearch = findViewById(R.id.btn_search);
+        tvSearch = findViewById(R.id.tv_search);
         rippleAnimationView = findViewById(R.id.layout_RippleAnimation);
         markerList = new ArrayList<>();
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
@@ -66,7 +67,7 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
     }
 
     private void initListener() {
-        btnSearch.setOnClickListener(v -> {
+        tvSearch.setOnClickListener(v -> {
             rippleAnimationView.startRippleAnimation();
             apiStart();
 
