@@ -15,6 +15,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
 import rx.Observable;
@@ -45,8 +46,10 @@ public class TreasureApi {
         @POST("login")
         Observable<Response<User>> login(@Body LoginParam param);
 
-        @POST("api/treasurelist/{activity_id}")
+        @POST("treasurelist/{activity_id}")
         Observable<Response<TreasureListEntity>> getTreasurelist(@Path("activity_id") String activityId, @Body TreasureListParam param);
 
+        @PUT("treasure/{treasure_id}")
+        Observable<Response<Void>> openTreasure(@Path("treasure_id") String treasureId);
     }
 }

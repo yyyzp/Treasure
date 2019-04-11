@@ -12,6 +12,7 @@ import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.activity.SearchTreasureActivity;
 import com.sohu.auto.treasure.adapter.BaseAdapter;
 import com.sohu.auto.treasure.adapter.UserActionAdapter;
+import com.sohu.auto.treasure.entry.EventFeed;
 import com.sohu.auto.treasure.net.NetError;
 import com.sohu.auto.treasure.net.NetSubscriber;
 import com.sohu.auto.treasure.net.TreasureApi;
@@ -34,6 +35,7 @@ public class TreasureFragment extends LazyLoadBaseFragment {
     TextView tvOfficalAction;
     TextView tvCreateAction;
     RecyclerView recyclerView;
+
 
     @Override
     protected int getLayoutResource() {
@@ -68,23 +70,26 @@ public class TreasureFragment extends LazyLoadBaseFragment {
 
                     }
                 });
-//        List<String> list = new ArrayList<>();
-//        list.add("活动1");
-//        list.add("活动2");
-//        list.add("活动3");
-//        list.add("活动4");
-//        adapter.setData(list);
+
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View item, int position) {
-                startActivity(new Intent(getActivity(), SearchTreasureActivity.class));
+                EventFeed  data= (EventFeed) adapter.getItemData(position);
+                Intent intent=new Intent(getActivity(), SearchTreasureActivity.class);
+                intent.putExtra("title",data.title);
+                intent.putExtra("activityId",data.id);
+                startActivity(intent);
             }
         });
     }
 
     private void initListener() {
         tvOfficalAction.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), SearchTreasureActivity.class));
+//            EventFeed  data= (EventFeed) adapter.getItemData(position);
+//            Intent intent=new Intent(getActivity(), SearchTreasureActivity.class);
+//            intent.putExtra("title",data.title);
+//            intent.putExtra("activityId",data.id);
+//            startActivity(intent);
         });
         tvCreateAction.setOnClickListener(v -> {
             if (Session.getInstance().isLogin())

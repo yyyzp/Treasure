@@ -3,9 +3,8 @@ package com.sohu.auto.treasure.activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,9 +21,9 @@ import com.sohu.auto.treasure.entry.TreasureListParam;
 import com.sohu.auto.treasure.fragment.TreasureDetailDialogFragment;
 import com.sohu.auto.treasure.net.NetError;
 import com.sohu.auto.treasure.net.NetSubscriber;
-import com.sohu.auto.treasure.net.ServiceFactory;
 import com.sohu.auto.treasure.net.TreasureApi;
 import com.sohu.auto.treasure.utils.MarkerDrawer;
+import com.sohu.auto.treasure.utils.TransformUtils;
 import com.sohu.auto.treasure.widget.RippleAnimationView;
 import com.sohu.auto.treasure.widget.SHAutoActionbar;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
@@ -32,7 +31,6 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -42,7 +40,6 @@ import rx.schedulers.Schedulers;
 
 public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.OnMyLocationChangeListener {
     static final int REQUSER_CODE_QUESTION = 1;
-    boolean hasQuestion = false;
     TextureMapView mTextureMapView;
     RippleAnimationView rippleAnimationView;
     AMap aMap;
@@ -114,6 +111,7 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
             TreasureListParam param = new TreasureListParam(d);
             TreasureApi.getInstance()
                     .getTreasurelist(mActivityId, param)
+                    .compose(TransformUtils.defaultNetConfig((RxAppCompatActivity) this))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(new NetSubscriber<TreasureListEntity>() {
@@ -125,11 +123,11 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
                             //draw markers
                             for (int i = 0; i < mTreasureListEntities.size(); i++) {
                                 Treasure treasure = new Treasure();
-                                treasure.latitude = mTreasureListEntities.get(i).getLocation().get(0);
-                                treasure.longitude = mTreasureListEntities.get(i).getLocation().get(1);
+                                treasure.locations[0] = mTreasureListEntities.get(i).getLocation().get(0);
+                                treasure.locations[1] = mTreasureListEntities.get(i).getLocation().get(1);
                                 treasure.id = mTreasureListEntities.get(i).getId();
                                 mTreasureList.add(treasure);
-                                LatLng latLng = new LatLng(treasure.latitude, treasure.longitude);
+                                LatLng latLng = new LatLng(treasure.locations[0], treasure.locations[1]);
 //                                double latitude = mTreasureListEntities.get(i).getLocation().get(0);
 //                                double longitude = mTreasureListEntities.get(i).getLocation().get(1);
 //                                LatLng latLng = new LatLng(latitude, longitude);
@@ -154,7 +152,7 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
     private void verifyOrOpen(LatLng latLng) {
         Treasure treasure = null;
         for (int i = 0; i < mTreasureList.size(); i++) {
-            if (mTreasureList.get(i).latitude == latLng.latitude && mTreasureList.get(i).longitude == latLng.longitude) {
+            if (mTreasureList.get(i).locations[0] == latLng.latitude && mTreasureList.get(i).locations[1] == latLng.longitude) {
                 treasure = mTreasureList.get(i);
                 break;
             }
@@ -163,13 +161,12 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
             return;
         }
 
-        if (hasQuestion) {
-
+        if (!TextUtils.isEmpty(treasure.question)) {
             Intent intent = new Intent(this, OpenTreasureActivity.class);
-            intent.putExtra("id", 1);
+            intent.putExtra("treasure", treasure);
             startActivityForResult(intent, REQUSER_CODE_QUESTION);
         } else {
-            TreasureDetailDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");
+            TreasureDetailDialogFragment.newInstance(treasure).show(getSupportFragmentManager(), "dialog");
         }
     }
 
