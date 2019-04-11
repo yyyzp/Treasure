@@ -1,6 +1,12 @@
 package com.sohu.auto.treasure.net;
 
+import com.sohu.auto.treasure.entry.LoginParam;
+import com.sohu.auto.treasure.entry.User;
+
+import retrofit2.Response;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Url;
 import rx.Observable;
 
@@ -10,7 +16,7 @@ import rx.Observable;
 
 public class TreasureApi {
 
-    private final static String BASE_URL = "";
+    private final static String BASE_URL = "http://10.2.154.227:8088/";
 
     private TreasureApi() {
     }
@@ -22,5 +28,9 @@ public class TreasureApi {
     public interface Api {
         @GET
         Observable<Void> getBaidu(@Url String url);
+
+        @POST("api/login")
+        Observable<Response<User>> login(@Body LoginParam param);
+
     }
 }

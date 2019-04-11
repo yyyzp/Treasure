@@ -2,15 +2,16 @@ package com.sohu.auto.treasure.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.activity.MyJoinActivity;
 import com.sohu.auto.treasure.activity.MyPublishedActivity;
-import com.sohu.auto.treasure.activity.TreasureListActivity;
+import com.sohu.auto.treasure.widget.Session;
 
 /**
  * Created by zhipengyang on 2019/4/9.
@@ -19,9 +20,11 @@ import com.sohu.auto.treasure.activity.TreasureListActivity;
  */
 
 public class LoginFragment extends LazyLoadBaseFragment {
-    TextView tv_logout;
-    RelativeLayout rl_create;
-    RelativeLayout rl_join;
+    private TextView tvLogout;
+    private ImageView ivPic;
+    private TextView tvName;
+    private RelativeLayout rlCreate;
+    private RelativeLayout rljoin;
 
     @Override
     protected int getLayoutResource() {
@@ -30,22 +33,29 @@ public class LoginFragment extends LazyLoadBaseFragment {
 
     @Override
     protected void onInitView(Bundle savedInstanceState) {
-        tv_logout = rootView.findViewById(R.id.tv_logout);
-        rl_create = rootView.findViewById(R.id.relative_create);
-        rl_join = rootView.findViewById(R.id.relative_join);
+        tvLogout = rootView.findViewById(R.id.tv_logout);
+        ivPic = rootView.findViewById(R.id.iv_pic);
+        tvName = rootView.findViewById(R.id.tv_nickname);
+        rlCreate = rootView.findViewById(R.id.relative_create);
+        rljoin = rootView.findViewById(R.id.relative_join);
+
+        Glide.with(this).load(Session.getInstance().mAvatar).apply(new RequestOptions().circleCrop()).into(ivPic);
+        tvName.setText(Session.getInstance().mNickName);
+
         initListener();
     }
 
     private void initListener() {
-        rl_create.setOnClickListener(v -> {
+        rlCreate.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), MyPublishedActivity.class));
         });
 
-        rl_join.setOnClickListener(v -> {
+        rljoin.setOnClickListener(v -> {
             startActivity(new Intent(getContext(), MyJoinActivity.class));
         });
 
-        tv_logout.setOnClickListener(v -> {
+        tvLogout.setOnClickListener(v -> {
+            Session.getInstance().logout();
             MeFragment fragment = (MeFragment) getParentFragment();
             fragment.checkIsLogin(false);
         });

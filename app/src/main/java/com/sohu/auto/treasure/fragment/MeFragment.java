@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.sohu.auto.treasure.R;
+import com.sohu.auto.treasure.widget.Session;
 
 /**
  * Created by zhipengyang on 2019/4/8.
@@ -38,7 +39,7 @@ public class MeFragment extends LazyLoadBaseFragment {
 
     public void checkIsLogin(boolean isLogin) {
         FragmentManager manager=getChildFragmentManager();
-        if(isLogin){
+        if(Session.getInstance().isLogin()){
             manager.beginTransaction().replace(R.id.container,new LoginFragment()).commit();
         }else {
             manager.beginTransaction().replace(R.id.container,new LogoutFragment()).commit();

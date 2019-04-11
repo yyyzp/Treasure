@@ -42,6 +42,7 @@ public class ServiceFactory {
         if (sOkHttpClient == null) {
             OkHttpClient.Builder okClientBuilder = new OkHttpClient.Builder();
             okClientBuilder.addInterceptor(getLoggingInterceptor());
+            okClientBuilder.addInterceptor(new TokenCheckInterceptor());
             setTimeOut(timeOut,okClientBuilder);
             sOkHttpClient = okClientBuilder.build();
         }
