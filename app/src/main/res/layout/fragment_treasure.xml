@@ -8,10 +8,10 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:id="@+id/tv_offical_action"
         android:layout_marginTop="15dp"
-        android:background="@color/colorPrimary"
+        android:background="@drawable/shape_button_grey"
         android:gravity="center"
         android:text="开放活动"
         android:textColor="#ffffff"

@@ -1,9 +1,12 @@
 package com.sohu.auto.treasure.activity;
 
+import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -11,6 +14,12 @@ import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MyLocationStyle;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeAddress;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
 import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.utils.MarkerDrawer;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
@@ -22,12 +31,13 @@ import java.util.List;
  * Created by zhipengyang on 2019/4/9.
  */
 
-public class TreasureLocationActivity extends RxAppCompatActivity implements AMap.OnMyLocationChangeListener {
-    TextureMapView mTextureMapView;
-    AMap aMap;
-    static List<Marker> markerList;
-    Marker mCenterMarker;
-    Button btnCreate;
+public class AddTreasureLocationActivity extends RxAppCompatActivity implements AMap.OnMyLocationChangeListener {
+    private TextureMapView mTextureMapView;
+    private GeocodeSearch geocoderSearch;
+    private AMap aMap;
+    private static List<Marker> markerList;
+    private Marker mCenterMarker;
+    private TextView tvCreate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +48,7 @@ public class TreasureLocationActivity extends RxAppCompatActivity implements AMa
 
     private void initView(Bundle savedInstanceState) {
         mTextureMapView = findViewById(R.id.texture_mapview);
-        btnCreate = findViewById(R.id.btn_create);
+        tvCreate = findViewById(R.id.tv_create);
         markerList = new ArrayList<>();
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         mTextureMapView.onCreate(savedInstanceState);//初始化地图控制器对象
@@ -50,9 +60,40 @@ public class TreasureLocationActivity extends RxAppCompatActivity implements AMa
     }
 
     private void initListener() {
-        btnCreate.setOnClickListener(v -> {
+        tvCreate.setOnClickListener(v -> {
             LatLng latLng = mCenterMarker.getPosition();
-            markerList.add(MarkerDrawer.drawMarker(TreasureLocationActivity.this, aMap, latLng));
+            getLocation(latLng);
+        });
+    }
+
+    //根据经纬度获取详细位置
+    private void getLocation(LatLng latLng) {
+        geocoderSearch = new GeocodeSearch(this);
+        // 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
+        LatLonPoint latLonPoint = new LatLonPoint(latLng.latitude, latLng.longitude);
+        RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 50, GeocodeSearch.AMAP);
+        geocoderSearch.getFromLocationAsyn(query);
+        geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
+            @Override
+            public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int code) {
+                //解析result获取地址描述信息
+                if (code == 1000) {
+                    RegeocodeAddress address = regeocodeResult.getRegeocodeAddress();
+                    Intent intent = getIntent();
+                    intent.putExtra("latitude", latLng.latitude);
+                    intent.putExtra("longitude", latLng.longitude);
+                    intent.putExtra("address", address.getFormatAddress());
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
+                    Toast.makeText(AddTreasureLocationActivity.this, "添加失败", Toast.LENGTH_LONG);
+                }
+            }
+
+            @Override
+            public void onGeocodeSearched(GeocodeResult geocodeResult, int code) {
+
+            }
         });
     }
 

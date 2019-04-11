@@ -19,6 +19,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
     private final static int REQUEST_CHOOSE_PIC = 1;
+    private final static int REQUEST_ADD_LOCATION = 2;
 
     private TextView tvLocation;
     private TextView tvChangeLocation;
@@ -69,6 +70,8 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
 
         tvChangeLocation.setOnClickListener(v -> {
             //todo to choose Map
+            Intent intent = new Intent(CreateTreasureAddDetailActivity.this, AddTreasureLocationActivity.class);
+            startActivityForResult(intent, REQUEST_ADD_LOCATION);
         });
 
         ivTreasureImage.setOnClickListener(v -> {
@@ -92,6 +95,13 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
                     imagePath = uri;
                     ivTreasureImage.setImageURI(imagePath);
                 }
+            }
+        } else if (requestCode == REQUEST_ADD_LOCATION) {
+            if (data != null && resultCode == RESULT_OK) {
+                String latitude = data.getStringExtra("latitude");
+                String longitude = data.getStringExtra("longitude");
+                String address = data.getStringExtra("address");
+                tvLocation.setText(address);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

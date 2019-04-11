@@ -5,17 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <com.sohu.auto.treasure.widget.SHAutoActionbar
-        android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:actionbar_type="common"
-        />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title"
-
         >
 
         <ImageView
@@ -46,7 +39,9 @@
         android:layout_height="2dp"
         android:layout_below="@+id/iv_pic"
         android:layout_marginTop="30dp"
-        android:background="#000000" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/cG3" />
 
     <RelativeLayout
         android:id="@+id/relative_create"
@@ -76,7 +71,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#000000" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/cG3" />
 
     <RelativeLayout
         android:id="@+id/relative_join"
@@ -105,7 +102,9 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#000000" />
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/cG3" />
 
     <TextView
         android:id="@+id/tv_logout"

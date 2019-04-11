@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTabHost;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabWidget;
 import android.widget.TextView;
@@ -26,6 +27,7 @@ public class MainActivity extends RxAppCompatActivity {
     private FragmentTabHost mTabHost;
     private TabWidget mTabWidget;
     private String[] mFragmentTags;
+    private int[] mFragmentTabIcons;
     private Class[] mFragments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,7 @@ public class MainActivity extends RxAppCompatActivity {
 
     private void initView() {
         mFragmentTags =new String[]{"寻宝","我的"};
+        mFragmentTabIcons=new int[]{R.mipmap.ic_search_treasure,R.mipmap.ic_me};
         mFragments = new Class[]{
                 TreasureFragment.class,
                 MeFragment.class
@@ -74,7 +77,9 @@ public class MainActivity extends RxAppCompatActivity {
         @SuppressLint("InflateParams")
         View view = getLayoutInflater().inflate(R.layout.view_tab_indicator, null);
         TextView tvTabText = (TextView) view.findViewById(R.id.tv_tab_main_activity_text);
+        ImageView ivTabImage = (ImageView) view.findViewById(R.id.tab_iv_image);
         tvTabText.setText(mFragmentTags[index]);
+        ivTabImage.setImageResource(mFragmentTabIcons[index]);
         return view;
     }
 }

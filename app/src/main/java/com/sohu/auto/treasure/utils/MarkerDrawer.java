@@ -54,7 +54,7 @@ public class MarkerDrawer {
         markerOption.position(latLng);
         markerOption.title("宝藏");
         markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                .decodeResource(activity.getResources(), R.mipmap.ic_locate)));
+                .decodeResource(activity.getResources(), R.mipmap.ic_flag)));
         Marker marker = aMap.addMarker(markerOption);
         marker.setPositionByPixels(DeviceInfo.getScreenWidth(activity) / 2, DeviceInfo.getScreenHeight(activity) / 2);
         return marker;
