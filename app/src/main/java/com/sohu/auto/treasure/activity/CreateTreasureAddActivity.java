@@ -20,6 +20,7 @@ import com.sohu.auto.treasure.utils.ToastUtils;
 import com.sohu.auto.treasure.utils.TransformUtils;
 import com.sohu.auto.treasure.widget.CommonItemDecoration;
 import com.sohu.auto.treasure.widget.SHAutoActionbar;
+import com.sohu.auto.treasure.widget.Session;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 /**
@@ -28,8 +29,6 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 public class CreateTreasureAddActivity extends RxAppCompatActivity {
     public final static int REQUEST_ADD = 1;
-
-    private final static String TEST_AUTH = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVjYWRjMGEwYzk0MzA2NmNlZTNlMGI0ZCJ9.MG_nHmm7wuD9JqibO2HaMFT1pBbGQEntAFkIfjJxLRM";
 
     private TreasureEvent treasureEvent;
     private SHAutoActionbar toolbar;
@@ -75,7 +74,7 @@ public class CreateTreasureAddActivity extends RxAppCompatActivity {
     private void postCreateTreasure(TreasureEvent treasureEvent) {
         TreasureApi
                 .getInstance()
-                .createTreasure(TEST_AUTH, treasureEvent)
+                .createTreasure(treasureEvent)
                 .compose(TransformUtils.defaultNetConfig(this))
                 .subscribe(new NetSubscriber<Void>() {
                     @Override

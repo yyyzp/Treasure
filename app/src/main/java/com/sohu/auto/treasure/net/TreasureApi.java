@@ -1,6 +1,8 @@
 package com.sohu.auto.treasure.net;
 
 import com.sohu.auto.treasure.entry.TreasureEvent;
+import com.sohu.auto.treasure.entry.LoginParam;
+import com.sohu.auto.treasure.entry.User;
 
 import retrofit2.Response;
 import retrofit2.http.Body;
@@ -30,8 +32,11 @@ public class TreasureApi {
         @GET
         Observable<Void> getBaidu(@Url String url);
 
-        @Headers({"Content-Type: application/json"})
+
         @POST("activity/create")
-        Observable<Response<Void>> createTreasure(@Header("Authorization") String authToken, @Body TreasureEvent requestBody);
+        Observable<Response<Void>> createTreasure(@Body TreasureEvent requestBody);
+
+        @POST("login")
+        Observable<Response<User>> login(@Body LoginParam param);
     }
 }

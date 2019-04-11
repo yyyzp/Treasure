@@ -12,6 +12,8 @@ import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.activity.SearchTreasureActivity;
 import com.sohu.auto.treasure.adapter.BaseAdapter;
 import com.sohu.auto.treasure.adapter.UserActionAdapter;
+import com.sohu.auto.treasure.utils.ToastUtils;
+import com.sohu.auto.treasure.widget.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,7 +66,10 @@ public class TreasureFragment extends LazyLoadBaseFragment {
             startActivity(new Intent(getActivity(), SearchTreasureActivity.class));
         });
         tvCreateAction.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), CreateTreasureActivity.class));
+            if (Session.getInstance().isLogin())
+                startActivity(new Intent(getActivity(), CreateTreasureActivity.class));
+            else
+                ToastUtils.show(TreasureFragment.this.getContext(), "要创建宝藏请先登录!");
         });
     }
 
