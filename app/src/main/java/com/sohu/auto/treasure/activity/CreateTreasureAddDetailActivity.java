@@ -10,7 +10,6 @@ import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.entry.RemotePicture;
@@ -52,8 +51,8 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
     private SHAutoActionbar toolbar;
 
     private String imagePath;
-    private String latitude;
-    private String longitude;
+    private double latitude;
+    private double longitude;
     private boolean isLoadingPic;
 
     @Override
@@ -88,12 +87,12 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
                     return;
 
                 Treasure treasure = new Treasure();
-                treasure.location = tvLocation.getText().toString();
-                treasure.latitude = latitude;
-                treasure.longitude = longitude;
-                treasure.text = edtTreasureText.getText().toString();
+                treasure.locationStr = tvLocation.getText().toString();
+                treasure.locations[0] = longitude;
+                treasure.locations[1] = latitude;
+                treasure.content = edtTreasureText.getText().toString();
                 treasure.imagePath = imagePath;
-                treasure.stem = edtTreasureQuestionStem.getText().toString();
+                treasure.question = edtTreasureQuestionStem.getText().toString();
                 treasure.answer = edtTreasureQuestionAnswer.getText().toString();
 
                 Intent intent = new Intent();
@@ -146,8 +145,8 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
             }
         } else if (requestCode == REQUEST_ADD_LOCATION) {
             if (data != null && resultCode == RESULT_OK) {
-                latitude = data.getStringExtra("latitude");
-                longitude = data.getStringExtra("longitude");
+                latitude = data.getDoubleExtra("latitude", 0.0d);
+                longitude = data.getDoubleExtra("longitude", 0.0f);
                 String address = data.getStringExtra("address");
                 tvLocation.setText(address);
             }

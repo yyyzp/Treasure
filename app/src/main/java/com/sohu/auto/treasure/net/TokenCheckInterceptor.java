@@ -40,7 +40,7 @@ public class TokenCheckInterceptor implements Interceptor {
 
         builder.header(CONTENT_TYPE, "application/json");
         if(Session.getInstance().mAuthToken!=null){
-            builder.header(AUTHORIZATION, Session.getInstance().mAuthToken);
+            builder.header(AUTHORIZATION, Session.getInstance().getAuthToken());
         }
 
         Request modifyRequest = builder.build();

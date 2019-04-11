@@ -40,7 +40,7 @@ public class CreateTreasureActivity extends RxAppCompatActivity {
             Intent intent = new Intent(CreateTreasureActivity.this, CreateTreasureAddActivity.class);
             TreasureEvent treasureEvent = new TreasureEvent();
             treasureEvent.title = etTitle.getText().toString();
-            treasureEvent.password = etPassword.getText().toString();
+            treasureEvent.secret = etPassword.getText().toString();
             intent.putExtra("treasureEvent", treasureEvent);
             startActivity(intent);
             // 关闭自己

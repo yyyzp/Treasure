@@ -13,8 +13,14 @@ import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.adapter.TreasureToAddAdapter;
 import com.sohu.auto.treasure.entry.Treasure;
 import com.sohu.auto.treasure.entry.TreasureEvent;
+import com.sohu.auto.treasure.net.NetError;
+import com.sohu.auto.treasure.net.NetSubscriber;
+import com.sohu.auto.treasure.net.TreasureApi;
+import com.sohu.auto.treasure.utils.ToastUtils;
+import com.sohu.auto.treasure.utils.TransformUtils;
 import com.sohu.auto.treasure.widget.CommonItemDecoration;
 import com.sohu.auto.treasure.widget.SHAutoActionbar;
+import com.sohu.auto.treasure.widget.Session;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 /**
@@ -43,8 +49,14 @@ public class CreateTreasureAddActivity extends RxAppCompatActivity {
         toolbar.setRightTx("创建");
         toolbar.setListener(event -> {
             if (event == SHAutoActionbar.ActionBarEvent.RIGHT_TEXT_CLICK) {
-                //todo 完成活动的创建
+
+                if (mAdapter.getCurrentTreasure().isEmpty()) {
+                    ToastUtils.show(this, "埋藏的宝藏不能为空！");
+                    return;
+                }
+
                 treasureEvent.treasures = mAdapter.getCurrentTreasure();
+                postCreateTreasure(treasureEvent);
             }
         });
         btnAddNewTreasure = findViewById(R.id.btn_add_new_treasure);
@@ -57,6 +69,24 @@ public class CreateTreasureAddActivity extends RxAppCompatActivity {
         rvTreasure.addItemDecoration(new CommonItemDecoration(this, 2));
         mAdapter = new TreasureToAddAdapter();
         rvTreasure.setAdapter(mAdapter);
+    }
+
+    private void postCreateTreasure(TreasureEvent treasureEvent) {
+        TreasureApi
+                .getInstance()
+                .createTreasure(treasureEvent)
+                .compose(TransformUtils.defaultNetConfig(this))
+                .subscribe(new NetSubscriber<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        finish();
+                    }
+
+                    @Override
+                    public void onFailure(NetError error) {
+                        ToastUtils.show(CreateTreasureAddActivity.this, error.message);
+                    }
+                });
     }
 
     @Override

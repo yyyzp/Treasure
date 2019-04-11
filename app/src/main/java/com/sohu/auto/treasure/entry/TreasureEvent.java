@@ -1,5 +1,7 @@
 package com.sohu.auto.treasure.entry;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -11,7 +13,8 @@ public class TreasureEvent implements Serializable{
 
     public String title;
 
-    public String password;
+    public String secret;
 
+    @SerializedName("treasure_list")
     public List<Treasure> treasures;
 }

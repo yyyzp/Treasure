@@ -67,6 +67,10 @@ public class Session {
                 .apply();
     }
 
+    public String getAuthToken() {
+        return "Bearer " + mAuthToken;
+    }
+
     public boolean isLogin() {
         return mUser != null && mAuthToken != null;
     }

@@ -1,15 +1,19 @@
 package com.sohu.auto.treasure.net;
 
+import com.sohu.auto.treasure.entry.TreasureEvent;
 import com.sohu.auto.treasure.entry.LoginParam;
 import com.sohu.auto.treasure.entry.TreasureListEntity;
 import com.sohu.auto.treasure.entry.TreasureListParam;
 import com.sohu.auto.treasure.entry.User;
+import com.sohu.auto.treasure.net.response.EventFeedResponse;
 
 import java.util.List;
 
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Url;
@@ -21,7 +25,7 @@ import rx.Observable;
 
 public class TreasureApi {
 
-    private final static String BASE_URL = "http://10.2.154.227:8088/";
+    private final static String BASE_URL = "http://10.2.154.227:8088/api/";
 
     private TreasureApi() {
     }
@@ -32,7 +36,13 @@ public class TreasureApi {
 
     public interface Api {
 
-        @POST("api/login")
+        @GET("activity/list")
+        Observable<Response<EventFeedResponse>> getEventList();
+
+        @POST("activity/create")
+        Observable<Response<Void>> createTreasure(@Body TreasureEvent requestBody);
+
+        @POST("login")
         Observable<Response<User>> login(@Body LoginParam param);
 
         @POST("api/treasurelist/{activity_id}")

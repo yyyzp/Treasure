@@ -12,6 +12,14 @@ import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.activity.SearchTreasureActivity;
 import com.sohu.auto.treasure.adapter.BaseAdapter;
 import com.sohu.auto.treasure.adapter.UserActionAdapter;
+import com.sohu.auto.treasure.net.NetError;
+import com.sohu.auto.treasure.net.NetSubscriber;
+import com.sohu.auto.treasure.net.TreasureApi;
+import com.sohu.auto.treasure.net.response.EventFeedResponse;
+import com.sohu.auto.treasure.utils.ToastUtils;
+import com.sohu.auto.treasure.utils.TransformUtils;
+import com.sohu.auto.treasure.widget.Session;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,12 +53,27 @@ public class TreasureFragment extends LazyLoadBaseFragment {
     }
 
     private void initData(BaseAdapter adapter) {
-        List<String> list = new ArrayList<>();
-        list.add("活动1");
-        list.add("活动2");
-        list.add("活动3");
-        list.add("活动4");
-        adapter.setData(list);
+        TreasureApi
+                .getInstance()
+                .getEventList()
+                .compose(TransformUtils.defaultNetConfig((RxAppCompatActivity) getContext()))
+                .subscribe(new NetSubscriber<EventFeedResponse>() {
+                    @Override
+                    public void onSuccess(EventFeedResponse eventFeedResponse) {
+                        adapter.setData(eventFeedResponse.data);
+                    }
+
+                    @Override
+                    public void onFailure(NetError error) {
+
+                    }
+                });
+//        List<String> list = new ArrayList<>();
+//        list.add("活动1");
+//        list.add("活动2");
+//        list.add("活动3");
+//        list.add("活动4");
+//        adapter.setData(list);
         adapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View item, int position) {
@@ -64,7 +87,10 @@ public class TreasureFragment extends LazyLoadBaseFragment {
             startActivity(new Intent(getActivity(), SearchTreasureActivity.class));
         });
         tvCreateAction.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), CreateTreasureActivity.class));
+            if (Session.getInstance().isLogin())
+                startActivity(new Intent(getActivity(), CreateTreasureActivity.class));
+            else
+                ToastUtils.show(TreasureFragment.this.getContext(), "要创建宝藏请先登录!");
         });
     }
 
