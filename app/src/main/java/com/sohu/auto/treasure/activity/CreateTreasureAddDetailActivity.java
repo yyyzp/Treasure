@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,12 +19,11 @@ import com.sohu.auto.treasure.net.NetError;
 import com.sohu.auto.treasure.net.NetSubscriber;
 import com.sohu.auto.treasure.net.PhotoApi;
 import com.sohu.auto.treasure.utils.CommonUtils;
+import com.sohu.auto.treasure.utils.ToastUtils;
 import com.sohu.auto.treasure.widget.SHAutoActionbar;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.io.File;
-import java.net.URI;
-import java.net.URISyntaxException;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -52,6 +52,8 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
     private SHAutoActionbar toolbar;
 
     private String imagePath;
+    private String latitude;
+    private String longitude;
     private boolean isLoadingPic;
 
     @Override
@@ -78,11 +80,17 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
         toolbar.setListener(event -> {
             if (event == SHAutoActionbar.ActionBarEvent.RIGHT_TEXT_CLICK) {
                 if (isLoadingPic) {
-                    Toast.makeText(this, "图片正在上传中，请稍等...", Toast.LENGTH_SHORT);
+                    ToastUtils.show(this, "图片正在上传中，请稍等...");
                     return;
                 }
+
+                if (!validInput())
+                    return;
+
                 Treasure treasure = new Treasure();
-                treasure.location = tvLocation.getText().toString() + "测试描述";
+                treasure.location = tvLocation.getText().toString();
+                treasure.latitude = latitude;
+                treasure.longitude = longitude;
                 treasure.text = edtTreasureText.getText().toString();
                 treasure.imagePath = imagePath;
                 treasure.stem = edtTreasureQuestionStem.getText().toString();
@@ -96,7 +104,6 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
         });
 
         tvChangeLocation.setOnClickListener(v -> {
-            //todo to choose Map
             Intent intent = new Intent(CreateTreasureAddDetailActivity.this, AddTreasureLocationActivity.class);
             startActivityForResult(intent, REQUEST_ADD_LOCATION);
         });
@@ -109,6 +116,20 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
                 startActivityForResult(i, REQUEST_CHOOSE_PIC);
             }
         });
+    }
+
+    private boolean validInput() {
+        if (TextUtils.isEmpty(tvLocation.getText())) {
+            ToastUtils.show(this, "宝藏必须指定埋藏地点");
+            return false;
+        }
+
+        if (TextUtils.isEmpty(edtTreasureText.getText()) && TextUtils.isEmpty(imagePath)) {
+            ToastUtils.show(this, "宝藏应至少包含图片或者文字其中的一种");
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -125,8 +146,8 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
             }
         } else if (requestCode == REQUEST_ADD_LOCATION) {
             if (data != null && resultCode == RESULT_OK) {
-                String latitude = data.getStringExtra("latitude");
-                String longitude = data.getStringExtra("longitude");
+                latitude = data.getStringExtra("latitude");
+                longitude = data.getStringExtra("longitude");
                 String address = data.getStringExtra("address");
                 tvLocation.setText(address);
             }
@@ -166,7 +187,6 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
     private Observable<Response<RemotePicture>> uploadImage(File imgFile) {
         RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), imgFile);
         MultipartBody.Part imagePart = MultipartBody.Part.createFormData("file", imgFile.getName(), imageBody);
-        // clientId 10002 用于微头条
         RequestBody client = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(CLIENT));
         return PhotoApi
                 .getInstance()

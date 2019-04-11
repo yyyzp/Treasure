@@ -41,7 +41,9 @@
                     android:hint="this is treasure detail"
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/tv_change_location"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_marginRight="10dp"
+                    android:maxLines="2"
+                    android:ellipsize="end"/>
 
                 <View
                     android:layout_width="match_parent"

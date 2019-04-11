@@ -1,7 +1,13 @@
 package com.sohu.auto.treasure.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.text.TextUtils;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -109,5 +115,21 @@ public class CommonUtils {
 
             }
         }
+    }
+
+    /**
+     * 最普通的加载图片
+     * */
+    public static void loadImage(Context context, String url, ImageView imageView) {
+
+        if (TextUtils.isEmpty(url))
+            return;
+
+        Glide
+                .with(context)
+                .load(url)
+                .diskCacheStrategy(DiskCacheStrategy.RESOURCE)
+                .centerCrop()
+                .into(imageView);
     }
 }
