@@ -59,5 +59,9 @@
         <activity android:name=".activity.CreateTreasureAddActivity" />
         <activity android:name=".activity.CreateTreasureAddDetailActivity" />
         <activity android:name=".activity.OpenTreasureActivity" />
+        <activity android:name=".activity.MyPublishedActivity"/>
+        <activity android:name=".activity.MyJoinActivity"/>
+        <activity android:name=".activity.TreasureListActivity"/>
+        <activity android:name=".activity.TreasureDetailActivity"/>
     </application>
 </manifest>

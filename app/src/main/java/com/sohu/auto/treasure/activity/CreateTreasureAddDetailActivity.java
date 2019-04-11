@@ -35,7 +35,7 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_treasure_add_detail);
         initView(savedInstanceState);
-        initLisenter();
+        initListener();
     }
 
     private void initView(Bundle savedInstanceState) {
@@ -50,7 +50,7 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
         toolbar.setRightTx("确定");
     }
 
-    private void initLisenter() {
+    private void initListener() {
         toolbar.setListener(event -> {
             if (event == SHAutoActionbar.ActionBarEvent.RIGHT_TEXT_CLICK) {
                 Treasure treasure = new Treasure();
@@ -73,7 +73,6 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
 
         ivTreasureImage.setOnClickListener(v -> {
             if (imagePath == null) {
-                //todo select Pic
                 Intent i = new Intent(
                         Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI);// 调用android的图库
