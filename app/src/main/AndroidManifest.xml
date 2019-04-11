@@ -56,7 +56,8 @@
         </activity>
         <activity android:name=".activity.SearchTreasureActivity" />
         <activity android:name=".activity.AddTreasureLocationActivity" />
-        <activity android:name=".activity.CreateTreasureActivity" />
+        <activity android:name=".activity.CreateTreasureActivity"
+            android:launchMode="singleTop"/>
         <activity android:name=".activity.CreateTreasureAddActivity" />
         <activity android:name=".activity.CreateTreasureAddDetailActivity" />
         <activity android:name=".activity.OpenTreasureActivity" />
