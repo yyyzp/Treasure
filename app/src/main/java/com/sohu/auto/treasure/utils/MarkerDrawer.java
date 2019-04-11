@@ -63,4 +63,8 @@ public class MarkerDrawer {
     public static float calculateLineDistance(LatLng locateLatLng,LatLng markerLatLng) {
         return AMapUtils.calculateLineDistance(locateLatLng, markerLatLng);
     }
+
+    public static void clearAllMarkers(AMap aMap){
+        aMap.clear();
+    }
 }

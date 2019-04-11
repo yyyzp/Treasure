@@ -1,12 +1,17 @@
 package com.sohu.auto.treasure.net;
 
 import com.sohu.auto.treasure.entry.LoginParam;
+import com.sohu.auto.treasure.entry.TreasureListEntity;
+import com.sohu.auto.treasure.entry.TreasureListParam;
 import com.sohu.auto.treasure.entry.User;
+
+import java.util.List;
 
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Url;
 import rx.Observable;
 
@@ -26,11 +31,12 @@ public class TreasureApi {
     }
 
     public interface Api {
-        @GET
-        Observable<Void> getBaidu(@Url String url);
 
         @POST("api/login")
         Observable<Response<User>> login(@Body LoginParam param);
+
+        @POST("api/treasurelist/{activity_id}")
+        Observable<Response<TreasureListEntity>> getTreasurelist(@Path("activity_id") String activityId, @Body TreasureListParam param);
 
     }
 }

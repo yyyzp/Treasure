@@ -10,14 +10,15 @@ import java.io.Serializable;
 
 public class Treasure implements Serializable {
 
+    public String id;
     // 宝藏地点
     public String location;
 
     // 宝藏维度
-    public String latitude;
+    public double latitude;
 
     // 宝藏经度
-    public String longitude;
+    public double longitude;
 
     // 宝藏文字描述
     public String text;
