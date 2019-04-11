@@ -1,17 +1,37 @@
 package com.sohu.auto.treasure.activity;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sohu.auto.treasure.R;
+import com.sohu.auto.treasure.entry.RemotePicture;
 import com.sohu.auto.treasure.entry.Treasure;
+import com.sohu.auto.treasure.net.NetError;
+import com.sohu.auto.treasure.net.NetSubscriber;
+import com.sohu.auto.treasure.net.PhotoApi;
+import com.sohu.auto.treasure.utils.CommonUtils;
 import com.sohu.auto.treasure.widget.SHAutoActionbar;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
+import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Response;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by aiyou on 2019/4/10.
@@ -19,6 +39,8 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
     private final static int REQUEST_CHOOSE_PIC = 1;
+    private final static int CLIENT = 10006;
+    private final static int MAX_IMG_SIZE = 500 * 1024;
 
     private TextView tvLocation;
     private TextView tvChangeLocation;
@@ -28,7 +50,8 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
     private EditText edtTreasureQuestionAnswer;
     private SHAutoActionbar toolbar;
 
-    private Uri imagePath;
+    private String imagePath;
+    private boolean isLoadingPic;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +76,14 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
     private void initListener() {
         toolbar.setListener(event -> {
             if (event == SHAutoActionbar.ActionBarEvent.RIGHT_TEXT_CLICK) {
+                if (isLoadingPic) {
+                    Toast.makeText(this, "图片正在上传中，请稍等...", Toast.LENGTH_SHORT);
+                    return;
+                }
                 Treasure treasure = new Treasure();
                 treasure.location = tvLocation.getText().toString() + "测试描述";
                 treasure.text = edtTreasureText.getText().toString();
-                treasure.image = imagePath;
+                treasure.imagePath = imagePath;
                 treasure.stem = edtTreasureQuestionStem.getText().toString();
                 treasure.answer = edtTreasureQuestionAnswer.getText().toString();
 
@@ -72,7 +99,7 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
         });
 
         ivTreasureImage.setOnClickListener(v -> {
-            if (imagePath == null) {
+            if (imagePath == null && !isLoadingPic) {
                 Intent i = new Intent(
                         Intent.ACTION_PICK,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI);// 调用android的图库
@@ -88,11 +115,63 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
                 Uri uri = data.getData();
                 if (uri != null) {
                     // 成功获取到图片
-                    imagePath = uri;
-                    ivTreasureImage.setImageURI(imagePath);
+                    if (!CommonUtils.isImageFile(getPath(uri))) return;
+                    ivTreasureImage.setImageURI(uri);
+                    handleImage(uri);
                 }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void handleImage(Uri imgUri) {
+        File imgFile = new File(getPath(imgUri));
+        // compress image below 500K
+        if (imgFile.length() > MAX_IMG_SIZE) {
+            byte[] compressImage = CommonUtils.compressImage(BitmapFactory.decodeFile(imgFile.getPath()), MAX_IMG_SIZE);
+            CommonUtils.bytes2File(compressImage, imgFile);
+        }
+
+        if (imgFile.length() <= 0) {
+            return;
+        }
+
+        isLoadingPic = true;
+        uploadImage(imgFile)
+                .subscribe(new NetSubscriber<RemotePicture>() {
+                    @Override
+                    public void onSuccess(RemotePicture remotePicture) {
+                        imagePath = remotePicture.url;
+                        isLoadingPic = false;
+                    }
+
+                    @Override
+                    public void onFailure(NetError error) {
+                        // todo end load
+                        isLoadingPic = false;
+                    }
+                });
+    }
+
+    private Observable<Response<RemotePicture>> uploadImage(File imgFile) {
+        RequestBody imageBody = RequestBody.create(MediaType.parse("multipart/form-data"), imgFile);
+        MultipartBody.Part imagePart = MultipartBody.Part.createFormData("file", imgFile.getName(), imageBody);
+        // clientId 10002 用于微头条
+        RequestBody client = RequestBody.create(MediaType.parse("multipart/form-data"), String.valueOf(CLIENT));
+        return PhotoApi
+                .getInstance()
+                .uploadImg(client, imagePart)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .compose(bindToLifecycle());
+    }
+
+    private String getPath(Uri uri) {
+        String[] projection = {MediaStore.Video.Media.DATA};
+        Cursor cursor = getContentResolver().query(uri, projection, null, null, null);
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Audio.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 }
