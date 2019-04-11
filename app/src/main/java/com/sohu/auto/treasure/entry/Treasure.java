@@ -19,6 +19,9 @@ public class Treasure implements Serializable {
     // 宝藏图片内容
     public Uri image;
 
+    // 宝藏图片的链接地址
+    public String imagePath;
+
     // 宝藏谜题题干
     public String stem;
 
