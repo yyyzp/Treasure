@@ -1,5 +1,8 @@
 package com.sohu.auto.treasure.net;
 
+import com.google.gson.FieldNamingPolicy;
+import com.google.gson.GsonBuilder;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -13,17 +16,23 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class ServiceFactory {
-    private static final String baseUrl = "http://www.baidu.com";
+    private static final GsonConverterFactory gsonConverterFactory = GsonConverterFactory.create(new GsonBuilder()
+            .setLenient()
+            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+            .setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+            .create());
+
+//    private static final String baseUrl = "http://www.baidu.com";
     private static OkHttpClient sOkHttpClient;
     private static final long CONNECTION_TIMEOUT = 30L;
 
-    public static <T> T createService(Class<T> serviceClass) {
-        return getRetrofitBuilder(0).build().create(serviceClass);
+    public static <T> T createService(String baseUrl, Class<T> serviceClass) {
+        return getRetrofitBuilder(baseUrl, 0).build().create(serviceClass);
     }
 
-    public static Retrofit.Builder getRetrofitBuilder(int timeout) {
+    public static Retrofit.Builder getRetrofitBuilder(String baseUrl, int timeout) {
         return new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(gsonConverterFactory)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .baseUrl(baseUrl)
                 .client(getOkHttpClient(timeout));

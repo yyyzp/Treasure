@@ -10,11 +10,13 @@ import rx.Observable;
 
 public class TreasureApi {
 
+    private final static String BASE_URL = "";
+
     private TreasureApi() {
     }
 
     public static Api getInstance() {
-        return ServiceFactory.createService(Api.class);
+        return ServiceFactory.createService(BASE_URL, Api.class);
     }
 
     public interface Api {
