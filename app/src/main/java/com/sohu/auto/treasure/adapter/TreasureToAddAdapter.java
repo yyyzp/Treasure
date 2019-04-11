@@ -58,7 +58,7 @@ public class TreasureToAddAdapter extends RecyclerView.Adapter {
         }
 
         private void initWithData(Treasure treasure) {
-            tvTreasureDetail.setText(treasure.location + "," + (treasure.text == null ? "" : treasure.text));
+            tvTreasureDetail.setText(treasure.locationStr + "," + (treasure.content == null ? "" : treasure.content));
         }
     }
 }

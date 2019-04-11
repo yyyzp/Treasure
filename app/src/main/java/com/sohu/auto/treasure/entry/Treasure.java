@@ -1,6 +1,6 @@
 package com.sohu.auto.treasure.entry;
 
-import android.net.Uri;
+import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
@@ -11,25 +11,21 @@ import java.io.Serializable;
 public class Treasure implements Serializable {
 
     // 宝藏地点
-    public String location;
+    public String locationStr;
 
-    // 宝藏维度
-    public String latitude;
-
-    // 宝藏经度
-    public String longitude;
+    // 宝藏经纬度
+    @SerializedName("location")
+    public double[] locations = new double[2];
 
     // 宝藏文字描述
-    public String text;
-
-    // 宝藏图片内容
-    public Uri image;
+    public String content;
 
     // 宝藏图片的链接地址
+    @SerializedName("image")
     public String imagePath;
 
     // 宝藏谜题题干
-    public String stem;
+    public String question;
 
     // 宝藏谜题正确答案
     public String answer;
