@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.adapter.EventAdapter;
-import com.sohu.auto.treasure.entry.EventHistory;
+import com.sohu.auto.treasure.entry.EventFeed;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ public class MyPublishedActivity extends RxAppCompatActivity {
     private RecyclerView rvMyEvent;
     private EventAdapter mAdapter;
 
-    private List<EventHistory> data = new ArrayList<>();
+    private List<EventFeed> data = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +51,11 @@ public class MyPublishedActivity extends RxAppCompatActivity {
         /**
          * 测试数据
          * */
-        List<EventHistory> list = new ArrayList<>();
+        List<EventFeed> list = new ArrayList<>();
 
         for(int i = 0; i < 3; i++) {
-            EventHistory history = new EventHistory();
-            history.id = i;
+            EventFeed history = new EventFeed();
+            history.id = String.valueOf(i);
             history.title = "用户发布的任务" + i;
             list.add(history);
         }

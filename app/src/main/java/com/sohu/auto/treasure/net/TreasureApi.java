@@ -3,6 +3,7 @@ package com.sohu.auto.treasure.net;
 import com.sohu.auto.treasure.entry.TreasureEvent;
 import com.sohu.auto.treasure.entry.LoginParam;
 import com.sohu.auto.treasure.entry.User;
+import com.sohu.auto.treasure.net.response.EventFeedResponse;
 
 import retrofit2.Response;
 import retrofit2.http.Body;
@@ -29,9 +30,9 @@ public class TreasureApi {
     }
 
     public interface Api {
-        @GET
-        Observable<Void> getBaidu(@Url String url);
 
+        @GET("activity/list")
+        Observable<Response<EventFeedResponse>> getEventList();
 
         @POST("activity/create")
         Observable<Response<Void>> createTreasure(@Body TreasureEvent requestBody);

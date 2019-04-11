@@ -1,26 +1,25 @@
 package com.sohu.auto.treasure.adapter;
 
 import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sohu.auto.treasure.R;
-import com.sohu.auto.treasure.entry.EventHistory;
+import com.sohu.auto.treasure.entry.EventFeed;
 
 /**
  * Created by aiyou on 2019/4/11.
  */
 
-public class EventAdapter extends BaseAdapter<EventHistory> {
+public class EventAdapter extends BaseAdapter<EventFeed> {
 
     @Override
-    public BaseViewHolder<EventHistory> onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder<EventFeed> onCreateViewHolder(ViewGroup parent, int viewType) {
         return new EventViewHolder(R.layout.item_event_history, parent, false);
     }
 
-    private class EventViewHolder extends BaseViewHolder<EventHistory> {
+    private class EventViewHolder extends BaseViewHolder<EventFeed> {
         private ImageView ivCover;
         private TextView tvTitle;
 
@@ -31,7 +30,7 @@ public class EventAdapter extends BaseAdapter<EventHistory> {
         }
 
         @Override
-        public void setData(EventHistory event, int position) {
+        public void setData(EventFeed event, int position) {
             tvTitle.setText(event.title);
         }
     }

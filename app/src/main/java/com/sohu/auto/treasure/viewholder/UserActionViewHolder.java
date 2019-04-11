@@ -8,12 +8,13 @@ import android.widget.TextView;
 
 import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.adapter.BaseAdapter;
+import com.sohu.auto.treasure.entry.EventFeed;
 
 /**
  * Created by zhipengyang on 2019/4/9.
  */
 
-public class UserActionViewHolder extends BaseAdapter.BaseViewHolder<String> {
+public class UserActionViewHolder extends BaseAdapter.BaseViewHolder<EventFeed> {
 
     TextView text;
 
@@ -23,7 +24,7 @@ public class UserActionViewHolder extends BaseAdapter.BaseViewHolder<String> {
     }
 
     @Override
-    public void setData(String feed, int position) {
-        text.setText(feed);
+    public void setData(EventFeed feed, int position) {
+        text.setText(feed.title);
     }
 }
