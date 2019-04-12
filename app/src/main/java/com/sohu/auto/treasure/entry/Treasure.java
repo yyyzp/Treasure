@@ -11,6 +11,7 @@ import java.io.Serializable;
 public class Treasure implements Serializable {
 
     // 宝藏地点
+    @SerializedName("address")
     public String locationStr;
 
     // 宝藏经纬度

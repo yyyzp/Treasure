@@ -45,6 +45,7 @@ public class MyPublishedActivity extends RxAppCompatActivity {
         mAdapter.setOnItemClickListener((item, position) -> {
             Intent intent = new Intent(MyPublishedActivity.this, TreasureListActivity.class);
             intent.putExtra("eventId", data.get(position).id);
+            intent.putExtra("from", 0);
             startActivity(intent);
         });
         rvMyEvent.setAdapter(mAdapter);

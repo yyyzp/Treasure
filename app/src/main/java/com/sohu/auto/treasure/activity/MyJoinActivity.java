@@ -8,6 +8,11 @@ import android.support.v7.widget.RecyclerView;
 import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.adapter.EventAdapter;
 import com.sohu.auto.treasure.entry.EventFeed;
+import com.sohu.auto.treasure.net.NetError;
+import com.sohu.auto.treasure.net.NetSubscriber;
+import com.sohu.auto.treasure.net.TreasureApi;
+import com.sohu.auto.treasure.net.response.EventFeedResponse;
+import com.sohu.auto.treasure.utils.TransformUtils;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.util.ArrayList;
@@ -40,26 +45,28 @@ public class MyJoinActivity extends RxAppCompatActivity {
         mAdapter.setOnItemClickListener((item, position) -> {
             Intent intent = new Intent(MyJoinActivity.this, TreasureListActivity.class);
             intent.putExtra("eventId", data.get(position).id);
+            intent.putExtra("from", 1);
             startActivity(intent);
         });
         rvJoin.setAdapter(mAdapter);
-
-        mAdapter.setData(data);
     }
 
     private void getData() {
-        /**
-         * 测试数据
-         * */
-        List<EventFeed> list = new ArrayList<>();
+        TreasureApi
+                .getInstance()
+                .getMyJoined()
+                .compose(TransformUtils.defaultNetConfig(this))
+                .subscribe(new NetSubscriber<EventFeedResponse>() {
+                    @Override
+                    public void onSuccess(EventFeedResponse eventFeedResponse) {
+                        data = eventFeedResponse.data;
+                        mAdapter.setData(data);
+                    }
 
-        for(int i = 0; i < 3; i++) {
-            EventFeed history = new EventFeed();
-            history.id = String.valueOf(i);
-            history.title = "自己参加的任务" + i;
-            list.add(history);
-        }
+                    @Override
+                    public void onFailure(NetError error) {
 
-        data = list;
+                    }
+                });
     }
 }

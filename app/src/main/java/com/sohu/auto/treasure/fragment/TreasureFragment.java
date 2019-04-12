@@ -14,6 +14,7 @@ import com.sohu.auto.treasure.activity.SearchTreasureActivity;
 import com.sohu.auto.treasure.adapter.BaseAdapter;
 import com.sohu.auto.treasure.adapter.UserActionAdapter;
 import com.sohu.auto.treasure.entry.EventFeed;
+import com.sohu.auto.treasure.event.RefreshEvent;
 import com.sohu.auto.treasure.net.NetError;
 import com.sohu.auto.treasure.net.NetSubscriber;
 import com.sohu.auto.treasure.net.TreasureApi;
@@ -23,6 +24,12 @@ import com.sohu.auto.treasure.utils.TransformUtils;
 import com.sohu.auto.treasure.widget.InputPasswordDialog;
 import com.sohu.auto.treasure.widget.Session;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 
 /**
@@ -35,6 +42,7 @@ public class TreasureFragment extends LazyLoadBaseFragment {
     TextView tvCreateAction;
     RecyclerView recyclerView;
     private UserActionAdapter mAdapter;
+    private List<EventFeed> data;
 
     @Override
     protected int getLayoutResource() {
@@ -61,7 +69,8 @@ public class TreasureFragment extends LazyLoadBaseFragment {
                 .subscribe(new NetSubscriber<EventFeedResponse>() {
                     @Override
                     public void onSuccess(EventFeedResponse eventFeedResponse) {
-                        mAdapter.setData(eventFeedResponse.data);
+                        data = eventFeedResponse.data;
+                        mAdapter.setData(data);
                     }
 
                     @Override
@@ -69,6 +78,20 @@ public class TreasureFragment extends LazyLoadBaseFragment {
 
                     }
                 });
+    }
+
+    private void initListener() {
+        tvOfficialAction.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), SearchTreasureActivity.class));
+        });
+        tvCreateAction.setOnClickListener(v -> {
+            if (!Session.getInstance().isLogin()) {
+                ToastUtils.show(TreasureFragment.this.getContext(), "要创建宝藏请先登录!");
+                return;
+            }
+
+            startActivity(new Intent(getActivity(), CreateTreasureActivity.class));
+        });
         mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View item, int position) {
@@ -98,36 +121,29 @@ public class TreasureFragment extends LazyLoadBaseFragment {
         });
     }
 
-    private void initListener() {
-        tvOfficialAction.setOnClickListener(v -> {
-//            InputPasswordDialog dialog = new InputPasswordDialog(getContext());
-//            dialog.withConfirmClickListener((view, inputText) -> {
-//                if ("1234".equals(inputText)) {
-//                    startActivity(new Intent(getActivity(), SearchTreasureActivity.class));
-//                } else {
-//                    ToastUtils.show(getContext(), "密码错误！");
-//                }
-//                dialog.dismiss();
-//            })
-//                    .withCancelClickListener((view, inputText) -> {
-//                        dialog.dismiss();
-//                    }).show();
-            startActivity(new Intent(getActivity(), SearchTreasureActivity.class));
-        });
-        tvCreateAction.setOnClickListener(v -> {
-            if (!Session.getInstance().isLogin()) {
-                ToastUtils.show(TreasureFragment.this.getContext(), "要创建宝藏请先登录!");
-                return;
-            }
-
-            startActivity(new Intent(getActivity(), CreateTreasureActivity.class));
-        });
-    }
-
     @Override
     protected void lazyLoad() {
 
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onRefreshEvent(RefreshEvent event) {
+        data.clear();
+        initData();
+    }
 }

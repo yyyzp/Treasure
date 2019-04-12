@@ -1,18 +1,16 @@
 package com.sohu.auto.treasure.activity;
 
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.Button;
 
 import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.adapter.TreasureToAddAdapter;
 import com.sohu.auto.treasure.entry.Treasure;
 import com.sohu.auto.treasure.entry.TreasureEvent;
+import com.sohu.auto.treasure.event.RefreshEvent;
 import com.sohu.auto.treasure.net.NetError;
 import com.sohu.auto.treasure.net.NetSubscriber;
 import com.sohu.auto.treasure.net.TreasureApi;
@@ -20,8 +18,9 @@ import com.sohu.auto.treasure.utils.ToastUtils;
 import com.sohu.auto.treasure.utils.TransformUtils;
 import com.sohu.auto.treasure.widget.CommonItemDecoration;
 import com.sohu.auto.treasure.widget.SHAutoActionbar;
-import com.sohu.auto.treasure.widget.Session;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by aiyou on 2019/4/10.
@@ -79,6 +78,7 @@ public class CreateTreasureAddActivity extends RxAppCompatActivity {
                 .subscribe(new NetSubscriber<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        EventBus.getDefault().post(new RefreshEvent());
                         finish();
                     }
 

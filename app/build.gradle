@@ -57,6 +57,7 @@ dependencies {
     implementation 'io.reactivex:rxjava:1.1.0'
     implementation 'com.trello:rxlifecycle:0.6.1'
     implementation 'com.trello:rxlifecycle-components:0.6.1'
+    implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.github.bumptech.glide:glide:4.9.0', {
         exclude group: 'com.android.support'
     }

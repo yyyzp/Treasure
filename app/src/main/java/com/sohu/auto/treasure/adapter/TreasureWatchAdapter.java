@@ -37,9 +37,15 @@ public class TreasureWatchAdapter extends BaseAdapter<BaseAdapter.BaseViewHolder
 
         @Override
         public void setData(TreasureHistory treasure, int position) {
-            tvTitle.setText(treasure.name + "," + treasure.location);
-            tvOpenTime.setText("开启时间：" + CommonUtils.formatDate(treasure.openTime, CommonUtils.SDF_YYYY_MM_DD_HH_MM));
-            tvOpenMan.setText("开启人：" + treasure.openMan);
+            tvTitle.setText(treasure.content + " " + treasure.locationStr);
+            if (treasure.status == 0) {
+                tvOpenTime.setText("开启时间：未开启");
+                tvOpenMan.setVisibility(View.GONE);
+            } else {
+                tvOpenTime.setText("开启时间：" + treasure.updatedAt);
+                tvOpenMan.setVisibility(View.VISIBLE);
+                tvOpenMan.setText("开启人：" + treasure.hunterName);
+            }
         }
     }
 }
