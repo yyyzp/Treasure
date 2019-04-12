@@ -215,7 +215,7 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
 
                     @Override
                     public void onFailure(NetError error) {
-                       
+
                     }
                 });
 
