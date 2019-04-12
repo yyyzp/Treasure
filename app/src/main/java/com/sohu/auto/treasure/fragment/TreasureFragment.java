@@ -104,7 +104,7 @@ public class TreasureFragment extends LazyLoadBaseFragment {
                     InputPasswordDialog dialog = new InputPasswordDialog(getContext());
                     dialog.withConfirmClickListener((v, inputText) -> {
                         if (event.secret.equals(inputText)) {
-                            toSearchTresureActivity(event);
+                            toSearchTreasureActivity(event);
                         } else {
                             ToastUtils.show(getContext(), "密码错误！");
                         }
@@ -114,13 +114,13 @@ public class TreasureFragment extends LazyLoadBaseFragment {
                                 dialog.dismiss();
                             }).show();
                 } else {
-                    toSearchTresureActivity(event);
+                    toSearchTreasureActivity(event);
                 }
             }
         });
     }
 
-    private void toSearchTresureActivity(EventFeed event) {
+    private void toSearchTreasureActivity(EventFeed event) {
         Intent intent=new Intent(getActivity(), SearchTreasureActivity.class);
         intent.putExtra("title",event.title);
         intent.putExtra("activityId",event.id);
@@ -141,8 +141,8 @@ public class TreasureFragment extends LazyLoadBaseFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onDestroy() {
+        super.onDestroy();
         if (EventBus.getDefault().isRegistered(this))
             EventBus.getDefault().unregister(this);
     }
