@@ -42,6 +42,7 @@ public class MyJoinActivity extends RxAppCompatActivity {
         rvJoin.setLayoutManager(new LinearLayoutManager(this));
 
         mAdapter = new EventAdapter();
+        mAdapter.setFrom(1);
         mAdapter.setOnItemClickListener((item, position) -> {
             Intent intent = new Intent(MyJoinActivity.this, TreasureListActivity.class);
             intent.putExtra("eventId", data.get(position).id);
