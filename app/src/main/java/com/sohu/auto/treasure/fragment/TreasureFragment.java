@@ -100,6 +100,12 @@ public class TreasureFragment extends LazyLoadBaseFragment {
                 }
 
                 EventFeed event = mAdapter.getItem(position);
+
+                if (Session.getInstance().getUser().getId().equals(event.creatorId)) {
+                    ToastUtils.show(TreasureFragment.this.getContext(), "创建者不能加入自己的活动");
+                    return;
+                }
+
                 if (!TextUtils.isEmpty(event.secret)) {
                     InputPasswordDialog dialog = new InputPasswordDialog(getContext());
                     dialog.withConfirmClickListener((v, inputText) -> {

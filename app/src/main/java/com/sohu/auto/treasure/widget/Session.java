@@ -71,6 +71,10 @@ public class Session {
         return "Bearer " + mAuthToken;
     }
 
+    public User.DataBean.UserInfoBean getUser() {
+        return mUser.getData().getUser_info();
+    }
+
     public boolean isLogin() {
         return mUser != null && mAuthToken != null;
     }
