@@ -25,10 +25,10 @@ import java.util.List;
 
 public class MarkerDrawer {
 
-    public static Marker drawMarker(Context context, AMap aMap, LatLng latLng) {
+    public static Marker drawMarker(Context context, AMap aMap, LatLng latLng,String treasureId) {
         MarkerOptions markerOption = new MarkerOptions();
         markerOption.position(latLng);
-        markerOption.title("宝藏");
+        markerOption.title(treasureId);
         markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                 .decodeResource(context.getResources(), R.mipmap.ic_treasure)));
         return aMap.addMarker(markerOption);
@@ -39,7 +39,7 @@ public class MarkerDrawer {
         LatLng latLng;
         for (Marker marker : markerList) {
             MarkerOptions markerOption = new MarkerOptions();
-            latLng = new LatLng(marker.getPosition().latitude, marker.getPosition().longitude);
+            latLng = new LatLng(marker.getPosition().latitude,marker.getPosition().longitude );
             markerOption.position(latLng);
             markerOption.title("宝藏");
             markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory

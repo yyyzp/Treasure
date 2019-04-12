@@ -59,7 +59,7 @@ public class ServiceFactory {
 
     private static HttpLoggingInterceptor getLoggingInterceptor(){
         HttpLoggingInterceptor httpLoggingInterceptor=new HttpLoggingInterceptor();
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.NONE);
+        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         return  httpLoggingInterceptor;
 
     }

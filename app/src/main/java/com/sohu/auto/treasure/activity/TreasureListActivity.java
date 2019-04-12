@@ -57,7 +57,7 @@ public class TreasureListActivity extends RxAppCompatActivity {
         mAdapter = new TreasureWatchAdapter();
         mAdapter.setOnItemClickListener((item, position) -> {
             Intent intent = new Intent(TreasureListActivity.this, TreasureDetailActivity.class);
-            intent.putExtra("treasureId", data.get(position).id);
+            intent.putExtra("treasure", data.get(position));
             startActivity(intent);
         });
 

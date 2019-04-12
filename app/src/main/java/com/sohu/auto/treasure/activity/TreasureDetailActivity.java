@@ -1,5 +1,6 @@
 package com.sohu.auto.treasure.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -18,7 +19,6 @@ public class TreasureDetailActivity extends RxAppCompatActivity {
     private TextView tvText;
     private ImageView ivImg;
     private Treasure treasure;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,13 +38,7 @@ public class TreasureDetailActivity extends RxAppCompatActivity {
     }
 
     private void getData() {
-        /**
-         * 测试数据
-         * */
-        Treasure t = new Treasure();
-        t.content = "我只是一个测试宝藏的文字描述而已\n不用想多了";
-        t.imagePath = "https://m2.auto.itc.cn/magicbook/03638fdd2bb146e3ad0f8e017aee6d06.jpg";
-
-        treasure = t;
+        Intent intent=getIntent();
+        treasure= (Treasure) intent.getSerializableExtra("treasure");
     }
 }

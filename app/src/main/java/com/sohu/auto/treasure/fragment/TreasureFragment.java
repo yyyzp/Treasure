@@ -38,7 +38,7 @@ import java.util.List;
 
 public class TreasureFragment extends LazyLoadBaseFragment {
 
-    TextView tvOfficialAction;
+//    TextView tvOfficialAction;
     TextView tvCreateAction;
     RecyclerView recyclerView;
     private UserActionAdapter mAdapter;
@@ -52,7 +52,7 @@ public class TreasureFragment extends LazyLoadBaseFragment {
 
     @Override
     protected void onInitView(Bundle savedInstanceState) {
-        tvOfficialAction = rootView.findViewById(R.id.tv_offical_action);
+//        tvOfficialAction = rootView.findViewById(R.id.tv_offical_action);
         tvCreateAction = rootView.findViewById(R.id.tv_create_action);
         recyclerView = rootView.findViewById(R.id.recyclerview);
         mAdapter = new UserActionAdapter();
