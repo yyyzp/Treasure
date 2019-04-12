@@ -10,6 +10,7 @@ import java.io.Serializable;
 
 public class Treasure implements Serializable {
 
+    public String id;
     // 宝藏地点
     @SerializedName("address")
     public String locationStr;

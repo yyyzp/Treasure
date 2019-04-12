@@ -1,8 +1,9 @@
 package com.sohu.auto.treasure.net;
 
-import com.sohu.auto.treasure.entry.TreasureEvent;
 import com.sohu.auto.treasure.entry.LoginParam;
-import com.sohu.auto.treasure.entry.TreasureHistory;
+import com.sohu.auto.treasure.entry.TreasureEvent;
+import com.sohu.auto.treasure.entry.TreasureListEntity;
+import com.sohu.auto.treasure.entry.TreasureListParam;
 import com.sohu.auto.treasure.entry.User;
 import com.sohu.auto.treasure.net.response.EventFeedResponse;
 import com.sohu.auto.treasure.net.response.TreasureHistoryResponse;
@@ -10,11 +11,9 @@ import com.sohu.auto.treasure.net.response.TreasureHistoryResponse;
 import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import retrofit2.http.Url;
 import rx.Observable;
 
 /**
@@ -52,5 +51,10 @@ public class TreasureApi {
         @GET("activitylist/joined")
         Observable<Response<EventFeedResponse>> getMyJoined();
 
+        @POST("treasurelist/{activity_id}")
+        Observable<Response<TreasureListEntity>> getTreasurelist(@Path("activity_id") String activityId, @Body TreasureListParam param);
+
+        @PUT("treasure/{treasure_id}")
+        Observable<Response<Void>> openTreasure(@Path("treasure_id") String treasureId);
     }
 }

@@ -8,24 +8,26 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sohu.auto.treasure.R;
+import com.sohu.auto.treasure.entry.Treasure;
 import com.sohu.auto.treasure.fragment.TreasureDetailDialogFragment;
+import com.sohu.auto.treasure.utils.ToastUtils;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 /**
  * Created by zhipengyang on 2019/4/10.
  */
 
-public class OpenTreasureActivity extends RxAppCompatActivity implements TreasureDetailDialogFragment.DismissListener{
-    int id;
+public class OpenTreasureActivity extends RxAppCompatActivity implements TreasureDetailDialogFragment.DismissListener {
     TextView tvQuestion;
     EditText etAnswer;
     Button btnConfirm;
+    Treasure treasure;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-        id = intent.getIntExtra("id", 0);
+        treasure = (Treasure) intent.getSerializableExtra("treasure");
         setContentView(R.layout.activity_open_treasure);
         initView();
     }
@@ -39,6 +41,7 @@ public class OpenTreasureActivity extends RxAppCompatActivity implements Treasur
         tvQuestion = findViewById(R.id.tv_question);
         etAnswer = findViewById(R.id.et_answer);
         btnConfirm = findViewById(R.id.btn_confirm);
+        tvQuestion.setText(TextUtils.isEmpty(treasure.question) ? " " : treasure.question);
         btnConfirm.setOnClickListener(v -> {
             verify();
         });
@@ -47,7 +50,14 @@ public class OpenTreasureActivity extends RxAppCompatActivity implements Treasur
     private void verify() {
         if (!TextUtils.isEmpty(etAnswer.getText())) {
             String answer = etAnswer.getText().toString().trim();
-            TreasureDetailDialogFragment.newInstance(this).show(getSupportFragmentManager(),"dialog");
+            if (TextUtils.equals(answer, treasure.question)) {
+                ToastUtils.show(this, "答案正确");
+                TreasureDetailDialogFragment.newInstance(treasure,this).show(getSupportFragmentManager(), "dialog");
+            } else {
+                ToastUtils.show(this, "答案错误");
+            }
+        } else {
+            ToastUtils.show(this, "请输入答案");
         }
     }
 

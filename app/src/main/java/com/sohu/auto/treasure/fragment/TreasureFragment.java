@@ -44,6 +44,7 @@ public class TreasureFragment extends LazyLoadBaseFragment {
     private UserActionAdapter mAdapter;
     private List<EventFeed> data;
 
+
     @Override
     protected int getLayoutResource() {
         return R.layout.fragment_treasure;
@@ -81,9 +82,6 @@ public class TreasureFragment extends LazyLoadBaseFragment {
     }
 
     private void initListener() {
-        tvOfficialAction.setOnClickListener(v -> {
-            startActivity(new Intent(getActivity(), SearchTreasureActivity.class));
-        });
         tvCreateAction.setOnClickListener(v -> {
             if (!Session.getInstance().isLogin()) {
                 ToastUtils.show(TreasureFragment.this.getContext(), "要创建宝藏请先登录!");
@@ -92,6 +90,7 @@ public class TreasureFragment extends LazyLoadBaseFragment {
 
             startActivity(new Intent(getActivity(), CreateTreasureActivity.class));
         });
+
         mAdapter.setOnItemClickListener(new BaseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View item, int position) {
@@ -105,7 +104,7 @@ public class TreasureFragment extends LazyLoadBaseFragment {
                     InputPasswordDialog dialog = new InputPasswordDialog(getContext());
                     dialog.withConfirmClickListener((v, inputText) -> {
                         if (event.secret.equals(inputText)) {
-                            startActivity(new Intent(getActivity(), SearchTreasureActivity.class));
+                            toSearchTresureActivity(event);
                         } else {
                             ToastUtils.show(getContext(), "密码错误！");
                         }
@@ -115,10 +114,17 @@ public class TreasureFragment extends LazyLoadBaseFragment {
                                 dialog.dismiss();
                             }).show();
                 } else {
-                    startActivity(new Intent(getActivity(), SearchTreasureActivity.class));
+                    toSearchTresureActivity(event);
                 }
             }
         });
+    }
+
+    private void toSearchTresureActivity(EventFeed event) {
+        Intent intent=new Intent(getActivity(), SearchTreasureActivity.class);
+        intent.putExtra("title",event.title);
+        intent.putExtra("activityId",event.id);
+        startActivity(intent);
     }
 
     @Override

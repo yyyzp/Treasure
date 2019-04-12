@@ -3,9 +3,8 @@ package com.sohu.auto.treasure.activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,17 +15,22 @@ import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.sohu.auto.treasure.R;
+import com.sohu.auto.treasure.entry.Treasure;
+import com.sohu.auto.treasure.entry.TreasureListEntity;
+import com.sohu.auto.treasure.entry.TreasureListParam;
 import com.sohu.auto.treasure.fragment.TreasureDetailDialogFragment;
-import com.sohu.auto.treasure.net.ServiceFactory;
+import com.sohu.auto.treasure.net.NetError;
+import com.sohu.auto.treasure.net.NetSubscriber;
 import com.sohu.auto.treasure.net.TreasureApi;
 import com.sohu.auto.treasure.utils.MarkerDrawer;
+import com.sohu.auto.treasure.utils.TransformUtils;
 import com.sohu.auto.treasure.widget.RippleAnimationView;
+import com.sohu.auto.treasure.widget.SHAutoActionbar;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -36,27 +40,37 @@ import rx.schedulers.Schedulers;
 
 public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.OnMyLocationChangeListener {
     static final int REQUSER_CODE_QUESTION = 1;
-    boolean hasQuestion = false;
     TextureMapView mTextureMapView;
     RippleAnimationView rippleAnimationView;
     AMap aMap;
     List<Marker> markerList;
     LatLng locateLatLng;
     TextView tvSearch;
+    SHAutoActionbar actionbar;
     boolean isFirst = true;
+    String mTitle;
+    String mActivityId;
+    private List<TreasureListEntity.DataBean> mTreasureListEntities;
+    private List<Treasure> mTreasureList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        mTitle = getIntent().getStringExtra("title");
+        mActivityId = getIntent().getStringExtra("activityId");
+        mTreasureListEntities = new ArrayList<>();
+        markerList = new ArrayList<>();
+        mTreasureList = new ArrayList<>();
         initView(savedInstanceState);
     }
 
     private void initView(Bundle savedInstanceState) {
         mTextureMapView = findViewById(R.id.texture_mapview);
+        actionbar = findViewById(R.id.title);
+        actionbar.setTitle(mTitle);
         tvSearch = findViewById(R.id.tv_search);
         rippleAnimationView = findViewById(R.id.layout_RippleAnimation);
-        markerList = new ArrayList<>();
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，创建地图
         mTextureMapView.onCreate(savedInstanceState);//初始化地图控制器对象
         if (aMap == null) {
@@ -68,65 +82,91 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
 
     private void initListener() {
         tvSearch.setOnClickListener(v -> {
-            rippleAnimationView.startRippleAnimation();
-            apiStart();
+            getTreasurelist();
 
         });
         aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-//                locate();
+                if (locateLatLng == null) {
+                    return false;
+                }
                 LatLng markerLatLng = marker.getPosition();
                 float distance = MarkerDrawer.calculateLineDistance(locateLatLng, markerLatLng);
                 if (distance < 10) {
-                    verifyOrOpen();
+                    verifyOrOpen(markerLatLng);
                     Toast.makeText(SearchTreasureActivity.this, "开启宝箱  distance   " + distance, Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(SearchTreasureActivity.this, "距离太远了  distance   " + distance, Toast.LENGTH_LONG).show();
+                    Toast.makeText(SearchTreasureActivity.this, "距离太远了  distance  " + distance, Toast.LENGTH_LONG).show();
                 }
                 return true;
             }
         });
     }
 
-    private void apiStart() {
-//        TreasureApi.getInstance().getBaidu("http://www.baidu.com")
-//                .subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Subscriber<Void>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        rippleAnimationView.stopRippleAnimation();
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(Void s) {
-//                        MarkerDrawer.drawMarkerList(SearchTreasureActivity.this, aMap, CreateTreasureActivity.markerList);
-//                    }
-//                });
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                rippleAnimationView.stopRippleAnimation();
-//                MarkerDrawer.drawMarkerList(SearchTreasureActivity.this, aMap, CreateTreasureActivity.markerList);
+    private void getTreasurelist() {
+        if (locateLatLng != null) {
+            rippleAnimationView.startRippleAnimation();
+            double[] d = new double[]{locateLatLng.latitude, locateLatLng.longitude};
+            TreasureListParam param = new TreasureListParam(d);
+            TreasureApi.getInstance()
+                    .getTreasurelist(mActivityId, param)
+                    .compose(TransformUtils.defaultNetConfig((RxAppCompatActivity) this))
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribeOn(Schedulers.io())
+                    .subscribe(new NetSubscriber<TreasureListEntity>() {
+                        @Override
+                        public void onSuccess(TreasureListEntity treasureListEntities) {
+                            //clear all markers
+                            MarkerDrawer.clearAllMarkers(aMap);
+                            mTreasureListEntities = treasureListEntities.getData();
+                            //draw markers
+                            for (int i = 0; i < mTreasureListEntities.size(); i++) {
+                                Treasure treasure = new Treasure();
+                                treasure.locations[0] = mTreasureListEntities.get(i).getLocation().get(0);
+                                treasure.locations[1] = mTreasureListEntities.get(i).getLocation().get(1);
+                                treasure.id = mTreasureListEntities.get(i).getId();
+                                mTreasureList.add(treasure);
+                                LatLng latLng = new LatLng(treasure.locations[0], treasure.locations[1]);
+//                                double latitude = mTreasureListEntities.get(i).getLocation().get(0);
+//                                double longitude = mTreasureListEntities.get(i).getLocation().get(1);
+//                                LatLng latLng = new LatLng(latitude, longitude);
+                                MarkerDrawer.drawMarker(SearchTreasureActivity.this, aMap, latLng);
+                            }
+                        }
 
-            }
-        }, 2000);
+                        @Override
+                        public void onFailure(NetError error) {
+                            rippleAnimationView.stopRippleAnimation();
+                        }
 
+                        @Override
+                        public void onCompleted() {
+                            super.onCompleted();
+                            rippleAnimationView.stopRippleAnimation();
+                        }
+                    });
+        }
     }
 
-    private void verifyOrOpen() {
-        if (hasQuestion) {
+    private void verifyOrOpen(LatLng latLng) {
+        Treasure treasure = null;
+        for (int i = 0; i < mTreasureList.size(); i++) {
+            if (mTreasureList.get(i).locations[0] == latLng.latitude && mTreasureList.get(i).locations[1] == latLng.longitude) {
+                treasure = mTreasureList.get(i);
+                break;
+            }
+        }
+        if (treasure == null) {
+            return;
+        }
+
+        if (!TextUtils.isEmpty(treasure.question)) {
             Intent intent = new Intent(this, OpenTreasureActivity.class);
-            intent.putExtra("id", 1);
+            intent.putExtra("treasure", treasure);
             startActivityForResult(intent, REQUSER_CODE_QUESTION);
         } else {
-            TreasureDetailDialogFragment.newInstance().show(getSupportFragmentManager(), "dialog");
+            TreasureDetailDialogFragment.newInstance(treasure).show(getSupportFragmentManager(), "dialog");
         }
     }
 

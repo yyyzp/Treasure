@@ -13,7 +13,9 @@ import com.sohu.auto.treasure.entry.User;
 import com.sohu.auto.treasure.net.NetError;
 import com.sohu.auto.treasure.net.NetSubscriber;
 import com.sohu.auto.treasure.net.TreasureApi;
+import com.sohu.auto.treasure.utils.TransformUtils;
 import com.sohu.auto.treasure.widget.Session;
+import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -55,6 +57,7 @@ public class LogoutFragment extends LazyLoadBaseFragment {
             LoginParam param = new LoginParam(name, passWord);
             TreasureApi.getInstance()
                     .login(param)
+                    .compose(TransformUtils.defaultNetConfig((RxAppCompatActivity) getContext()))
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribeOn(Schedulers.io())
                     .subscribe(new NetSubscriber<User>() {

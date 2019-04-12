@@ -47,6 +47,10 @@ public abstract class BaseAdapter<E> extends RecyclerView.Adapter<BaseAdapter.Ba
         }
     }
 
+    public E getItemData(int pos) {
+        return (E)mItems.get(pos);
+    }
+
     @Override
     public void onBindViewHolder(BaseViewHolder<E> holder, int position) {
         E item = mItems.get(position);
