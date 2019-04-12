@@ -99,6 +99,7 @@ public class RippleAnimationView extends RelativeLayout {
         for (int i = 0; i < rippleAmount; i++) {
 
             RippleCircleView rippleView = new RippleCircleView(this, context);
+            rippleView.setAlpha(0.0f);
             addView(rippleView, rippleParams);
             rippleViewList.add(rippleView);
             //ScaleX缩放
@@ -116,7 +117,7 @@ public class RippleAnimationView extends RelativeLayout {
             scaleYAnimator.setDuration(rippleDuration);
             animatorList.add(scaleYAnimator);
             //Alpha渐变
-            final ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(rippleView, "Alpha", 1.0f, 0f);
+            final ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(rippleView, "Alpha", 0.6f, 0f);
             alphaAnimator.setRepeatCount(ObjectAnimator.INFINITE);//无限重复
             alphaAnimator.setRepeatMode(ObjectAnimator.RESTART);
             alphaAnimator.setStartDelay(i * rippleDelay);
@@ -147,12 +148,14 @@ public class RippleAnimationView extends RelativeLayout {
      */
     public void stopRippleAnimation() {
         if (isRippleRunning()) {
+            animatorSet.end();
+            animationRunning = false;
             Collections.reverse(rippleViewList);
             for (RippleCircleView rippleView : rippleViewList) {
                 rippleView.setVisibility(INVISIBLE);
+                rippleView.setScaleX(1.0f);
+                rippleView.setScaleY(1.0f);
             }
-            animatorSet.end();
-            animationRunning = false;
         }
     }
 
