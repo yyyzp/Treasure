@@ -143,6 +143,9 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
                             //clear all markers
                             MarkerDrawer.clearAllMarkers(aMap);
                             mTreasureListEntities = treasureListEntities.getData();
+                            if (mTreasureListEntities == null) {
+                                return;
+                            }
                             //draw markers
                             for (int i = 0; i < mTreasureListEntities.size(); i++) {
                                 Treasure treasure = new Treasure();
@@ -176,7 +179,7 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
                                 public void run() {
                                     rippleAnimationView.stopRippleAnimation();
                                 }
-                            }, 1000);
+                            }, 500);
                         }
                     });
         }
@@ -241,6 +244,7 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
     public void onResume() {
         super.onResume();
         mTextureMapView.onResume();
+        getTreasurelist();
     }
 
     @Override
