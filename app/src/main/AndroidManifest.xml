@@ -48,7 +48,8 @@
             android:value="f240a2684f6b1e766f35be935344f9e6" />
 
 
-        <activity android:name=".activity.MainActivity">
+        <activity android:name=".activity.MainActivity"
+            android:icon="@drawable/logo">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />

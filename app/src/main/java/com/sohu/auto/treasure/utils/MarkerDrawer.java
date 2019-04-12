@@ -4,17 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 
-import com.amap.api.location.CoordinateConverter;
-import com.amap.api.location.DPoint;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.AMapUtils;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
-import com.amap.api.maps.model.MarkerOptionsCreator;
 import com.sohu.auto.treasure.R;
-import com.sohu.auto.treasure.utils.DeviceInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +25,7 @@ public class MarkerDrawer {
         MarkerOptions markerOption = new MarkerOptions();
         markerOption.position(latLng);
         markerOption.title(treasureId);
+        markerOption.displayLevel(6);
         markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
                 .decodeResource(context.getResources(), R.mipmap.ic_treasure)));
         return aMap.addMarker(markerOption);
@@ -43,7 +40,7 @@ public class MarkerDrawer {
             markerOption.position(latLng);
             markerOption.title("宝藏");
             markerOption.icon(BitmapDescriptorFactory.fromBitmap(BitmapFactory
-                    .decodeResource(context.getResources(), R.mipmap.ic_treasure)));
+                    .decodeResource(context.getResources(), R.mipmap.ic_treasure2)));
             list.add(markerOption);
         }
         aMap.addMarkers(list, false);
