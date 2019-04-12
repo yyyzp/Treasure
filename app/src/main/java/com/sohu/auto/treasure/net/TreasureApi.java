@@ -48,6 +48,9 @@ public class TreasureApi {
         @GET("treasurelist/published/{activityId}")
         Observable<Response<TreasureHistoryResponse>> getPublishedTreasure(@Path("activityId") String activityId);
 
+        @GET("treasurelist/joined/{activityId}")
+        Observable<Response<TreasureHistoryResponse>> getJoinedTreasure(@Path("activityId") String activityId);
+
         @GET("activitylist/joined")
         Observable<Response<EventFeedResponse>> getMyJoined();
 

@@ -54,6 +54,7 @@ public class TreasureListActivity extends RxAppCompatActivity {
         rvTreasure.setLayoutManager(new LinearLayoutManager(this));
 
         mAdapter = new TreasureWatchAdapter();
+        mAdapter.setFrom(from);
         mAdapter.setOnItemClickListener((item, position) -> {
             Intent intent = new Intent(TreasureListActivity.this, TreasureDetailActivity.class);
             intent.putExtra("treasure", data.get(position).convertToTreasure());
@@ -67,37 +68,40 @@ public class TreasureListActivity extends RxAppCompatActivity {
         if (TextUtils.isEmpty(eventId))
             return;
 
-        TreasureApi
-                .getInstance()
-                .getPublishedTreasure(eventId)
-                .compose(TransformUtils.defaultNetConfig(this))
-                .subscribe(new NetSubscriber<TreasureHistoryResponse>() {
-                    @Override
-                    public void onSuccess(TreasureHistoryResponse treasureHistoryResponse) {
-                        data = treasureHistoryResponse.data;
-                        mAdapter.setData(data);
-                    }
+        if (from == 0) {
+            TreasureApi
+                    .getInstance()
+                    .getPublishedTreasure(eventId)
+                    .compose(TransformUtils.defaultNetConfig(this))
+                    .subscribe(new NetSubscriber<TreasureHistoryResponse>() {
+                        @Override
+                        public void onSuccess(TreasureHistoryResponse treasureHistoryResponse) {
+                            data = treasureHistoryResponse.data;
+                            mAdapter.setData(data);
+                        }
 
-                    @Override
-                    public void onFailure(NetError error) {
+                        @Override
+                        public void onFailure(NetError error) {
 
-                    }
-                });
-        /**
-         * 测试数据
-         * */
-//        List<TreasureHistory> list = new ArrayList<>();
-//
-//        for(int i = 0; i < 5; i++) {
-//            TreasureHistory treasureHistory = new TreasureHistory();
-//            treasureHistory.id = 0;
-//            treasureHistory.name = "宝藏" + i;
-//            treasureHistory.location = "some where";
-//            treasureHistory.openTime = System.currentTimeMillis();
-//            treasureHistory.openMan = "坛哥" + i;
-//            list.add(treasureHistory);
-//        }
-//
-//        data = list;
+                        }
+                    });
+        } else {
+            TreasureApi
+                    .getInstance()
+                    .getJoinedTreasure(eventId)
+                    .compose(TransformUtils.defaultNetConfig(this))
+                    .subscribe(new NetSubscriber<TreasureHistoryResponse>() {
+                        @Override
+                        public void onSuccess(TreasureHistoryResponse treasureHistoryResponse) {
+                            data = treasureHistoryResponse.data;
+                            mAdapter.setData(data);
+                        }
+
+                        @Override
+                        public void onFailure(NetError error) {
+
+                        }
+                    });
+        }
     }
 }

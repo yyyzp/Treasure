@@ -17,9 +17,15 @@ import com.sohu.auto.treasure.utils.CommonUtils;
 
 public class TreasureWatchAdapter extends BaseAdapter<BaseAdapter.BaseViewHolder<TreasureHistory>> {
 
+    private int from;
+
     @Override
     public BaseAdapter.BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new TreasureWatchViewHolder(R.layout.item_treasure, parent, false);
+    }
+
+    public void setFrom(int from) {
+        this.from = from;
     }
 
     private class TreasureWatchViewHolder extends BaseViewHolder<TreasureHistory> {
@@ -47,7 +53,7 @@ public class TreasureWatchAdapter extends BaseAdapter<BaseAdapter.BaseViewHolder
 
             tvOpenTime.setText(treasure.updatedAt.substring(0, 10) + " " + treasure.updatedAt.substring(11, 16));
 
-            if (treasure.creatorId.equals(treasure.hunterId)) {
+            if (from == 1) {
                 tvOpenMan.setVisibility(View.GONE);
             } else {
                 tvOpenMan.setVisibility(View.VISIBLE);
