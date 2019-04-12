@@ -44,7 +44,7 @@ public class Session {
         if (mUser != null) {
             mAuthToken = mUser.getData().getToken();
             mAvatar = mUser.getData().getUser_info().getAvatar();
-            mNickName = mUser.getData().getUser_info().getName();
+            mNickName = mUser.getData().getUser_info().getNickname();
         }
     }
 
@@ -60,7 +60,7 @@ public class Session {
         mUser = user;
         mAuthToken = user.getData().getToken();
         mAvatar = mUser.getData().getUser_info().getAvatar();
-        mNickName = mUser.getData().getUser_info().getName();
+        mNickName = mUser.getData().getUser_info().getNickname();
         mPreference
                 .edit()
                 .putString(SP_KEY_USER, mGson.toJson(user))
