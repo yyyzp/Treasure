@@ -25,7 +25,7 @@ public class EventFeed {
     public String title;
 
     // 活动密码
-    public String secrete;
+    public String secret;
 
     // 宝藏ids
     public List<String> boxIds;

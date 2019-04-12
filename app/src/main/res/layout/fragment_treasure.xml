@@ -26,8 +26,8 @@
 
     <TextView
         android:id="@+id/tv_create_action"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:text="创建"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"

@@ -38,7 +38,7 @@
                     android:id="@+id/tv_location"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="this is treasure detail"
+                    android:hint="宝藏位置..."
                     android:layout_alignParentLeft="true"
                     android:layout_toLeftOf="@+id/tv_change_location"
                     android:layout_marginRight="10dp"

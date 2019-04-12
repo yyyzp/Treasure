@@ -39,5 +39,9 @@ public class TreasureApi {
 
         @POST("login")
         Observable<Response<User>> login(@Body LoginParam param);
+
+        @GET("activitylist/published")
+        Observable<Response<EventFeedResponse>> getMyPublished();
+
     }
 }

@@ -32,6 +32,13 @@ public abstract class BaseAdapter<E> extends RecyclerView.Adapter<BaseAdapter.Ba
         }
     }
 
+    public E getItem(int position) {
+        if (position >= getItemCount())
+            return null;
+
+        return mItems.get(position);
+    }
+
     public void addData(List list) {
         if (list != null && list.size() > 0) {
             int pos = mItems.size();
