@@ -60,4 +60,13 @@ public class TreasureHistory implements Serializable {
     // 创建者id
     @SerializedName("creator_id")
     public String creatorId;
+
+    public Treasure convertToTreasure() {
+        // 只包含了关键信息
+        Treasure treasure = new Treasure();
+        treasure.id = this.id;
+        treasure.content = this.content;
+        treasure.imagePath = this.imagePath;
+        return treasure;
+    }
 }

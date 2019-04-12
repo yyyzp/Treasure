@@ -7,6 +7,16 @@
     android:paddingRight="15dp">
 
     <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="活动大厅"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="@dimen/font_20"/>
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:visibility="gone"
@@ -20,15 +30,15 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
-        android:layout_below="@+id/tv_offical_action"
+        android:layout_below="@+id/tv_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp" />
+        android:layout_marginTop="10dp" />
 
     <TextView
         android:id="@+id/tv_create_action"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:text="创建"
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
@@ -36,7 +46,8 @@
         android:layout_marginRight="10dp"
         android:padding="5dp"
         android:gravity="center"
-        android:textColor="@color/cG1"
+        android:textColor="@color/white"
         android:background="@drawable/shape_circle_button"
+        android:elevation="8dp"
         />
 </RelativeLayout>

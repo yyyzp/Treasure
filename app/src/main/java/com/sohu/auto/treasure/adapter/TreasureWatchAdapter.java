@@ -19,7 +19,7 @@ public class TreasureWatchAdapter extends BaseAdapter<BaseAdapter.BaseViewHolder
 
     @Override
     public BaseAdapter.BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new TreasureWatchViewHolder(R.layout.item_treasure_watch, parent, false);
+        return new TreasureWatchViewHolder(R.layout.item_treasure, parent, false);
     }
 
     private class TreasureWatchViewHolder extends BaseViewHolder<TreasureHistory> {
@@ -30,28 +30,28 @@ public class TreasureWatchAdapter extends BaseAdapter<BaseAdapter.BaseViewHolder
 
         public TreasureWatchViewHolder(int resource, @Nullable ViewGroup root, boolean attachToRoot) {
             super(resource, root, attachToRoot);
-            tvTitle = itemView.findViewById(R.id.tv_treasure_title);
-            tvOpenTime = itemView.findViewById(R.id.tv_open_time);
+            tvTitle = itemView.findViewById(R.id.text);
+            tvOpenTime = itemView.findViewById(R.id.tv_time);
             tvOpenMan = itemView.findViewById(R.id.tv_open_man);
         }
 
         @Override
         public void setData(TreasureHistory treasure, int position) {
-            tvTitle.setText(treasure.content + " " + treasure.locationStr);
+            tvTitle.setText(treasure.locationStr);
 
             if (treasure.status == 0) {
-                tvOpenTime.setText("开启时间：未开启");
+                tvOpenTime.setText("未开启");
                 tvOpenMan.setVisibility(View.GONE);
                 return;
             }
 
-            tvOpenTime.setText("开启时间：" + treasure.updatedAt);
+            tvOpenTime.setText(treasure.updatedAt.substring(0, 10) + " " + treasure.updatedAt.substring(11, 16));
 
             if (treasure.creatorId.equals(treasure.hunterId)) {
                 tvOpenMan.setVisibility(View.GONE);
             } else {
                 tvOpenMan.setVisibility(View.VISIBLE);
-                tvOpenMan.setText("开启人：" + treasure.hunterName);
+                tvOpenMan.setText(treasure.hunterName);
             }
         }
     }

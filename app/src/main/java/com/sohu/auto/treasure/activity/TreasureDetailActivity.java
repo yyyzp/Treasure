@@ -39,6 +39,6 @@ public class TreasureDetailActivity extends RxAppCompatActivity {
 
     private void getData() {
         Intent intent=getIntent();
-        treasure= (Treasure) intent.getSerializableExtra("treasure");
+        treasure = (Treasure) intent.getSerializableExtra("treasure");
     }
 }

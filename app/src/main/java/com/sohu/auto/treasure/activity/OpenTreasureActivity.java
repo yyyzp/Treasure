@@ -54,6 +54,7 @@ public class OpenTreasureActivity extends RxAppCompatActivity{
                 Intent intent = new Intent(OpenTreasureActivity.this, TreasureDetailActivity.class);
                 intent.putExtra("treasure", treasure);
                 startActivity(intent);
+                finish();
             } else {
                 ToastUtils.show(this, "答案错误");
             }
