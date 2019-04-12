@@ -205,8 +205,6 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
                                 Intent intent = new Intent(SearchTreasureActivity.this, OpenTreasureActivity.class);
                                 intent.putExtra("treasure", finalTreasure);
                                 startActivity(intent);
-                            } else if (getResponse().code() == 400) {
-                                ToastUtils.show(SearchTreasureActivity.this, "不能开启自己创建的宝箱！");
                             } else {
                                 Intent intent = new Intent(SearchTreasureActivity.this, TreasureDetailActivity.class);
                                 intent.putExtra("treasure", finalTreasure);
@@ -217,7 +215,7 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
 
                     @Override
                     public void onFailure(NetError error) {
-
+                       
                     }
                 });
 
