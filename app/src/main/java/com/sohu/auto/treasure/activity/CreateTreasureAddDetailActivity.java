@@ -148,6 +148,9 @@ public class CreateTreasureAddDetailActivity extends RxAppCompatActivity {
                 latitude = data.getDoubleExtra("latitude", 0.0d);
                 longitude = data.getDoubleExtra("longitude", 0.0f);
                 String address = data.getStringExtra("address");
+                if(TextUtils.isEmpty(address)){
+                    address=longitude+"   "+latitude;
+                }
                 tvLocation.setText(address);
             }
         }

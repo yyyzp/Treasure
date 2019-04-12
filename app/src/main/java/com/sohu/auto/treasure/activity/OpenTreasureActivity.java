@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.entry.Treasure;
-import com.sohu.auto.treasure.fragment.TreasureDetailDialogFragment;
 import com.sohu.auto.treasure.utils.ToastUtils;
 import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
 
@@ -17,7 +16,7 @@ import com.trello.rxlifecycle.components.support.RxAppCompatActivity;
  * Created by zhipengyang on 2019/4/10.
  */
 
-public class OpenTreasureActivity extends RxAppCompatActivity implements TreasureDetailDialogFragment.DismissListener {
+public class OpenTreasureActivity extends RxAppCompatActivity{
     TextView tvQuestion;
     EditText etAnswer;
     Button btnConfirm;
@@ -52,7 +51,9 @@ public class OpenTreasureActivity extends RxAppCompatActivity implements Treasur
             String answer = etAnswer.getText().toString().trim();
             if (TextUtils.equals(answer, treasure.question)) {
                 ToastUtils.show(this, "答案正确");
-                TreasureDetailDialogFragment.newInstance(treasure,this).show(getSupportFragmentManager(), "dialog");
+                Intent intent = new Intent(OpenTreasureActivity.this, TreasureDetailActivity.class);
+                intent.putExtra("treasure", treasure);
+                startActivity(intent);
             } else {
                 ToastUtils.show(this, "答案错误");
             }
@@ -61,8 +62,4 @@ public class OpenTreasureActivity extends RxAppCompatActivity implements Treasur
         }
     }
 
-    @Override
-    public void onDismiss() {
-        finish();
-    }
 }

@@ -3,6 +3,7 @@ package com.sohu.auto.treasure.activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.TextView;
@@ -18,7 +19,6 @@ import com.sohu.auto.treasure.R;
 import com.sohu.auto.treasure.entry.Treasure;
 import com.sohu.auto.treasure.entry.TreasureListEntity;
 import com.sohu.auto.treasure.entry.TreasureListParam;
-import com.sohu.auto.treasure.fragment.TreasureDetailDialogFragment;
 import com.sohu.auto.treasure.net.NetError;
 import com.sohu.auto.treasure.net.NetSubscriber;
 import com.sohu.auto.treasure.net.TreasureApi;
@@ -91,9 +91,13 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
                 if (locateLatLng == null) {
                     return false;
                 }
-                LatLng markerLatLng = marker.getPosition();
+                String treasureId = marker.getTitle();
+                LatLng markerLatLng = findTreasure(treasureId);
+//                LatLng markerLatLng = marker.getPosition();
                 float distance = MarkerDrawer.calculateLineDistance(locateLatLng, markerLatLng);
-                if (distance < 10) {
+//                Toast.makeText(SearchTreasureActivity.this, markerLatLng.longitude + "    " + markerLatLng.latitude + "     " + distance, Toast.LENGTH_LONG).show();
+
+                if (distance < 50) {
                     verifyOrOpen(markerLatLng);
                     Toast.makeText(SearchTreasureActivity.this, "开启宝箱  distance   " + distance, Toast.LENGTH_LONG).show();
                 } else {
@@ -104,10 +108,24 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
         });
     }
 
+    private LatLng findTreasure(String treasureId) {
+        LatLng latLng;
+        for (int i = 0; i < mTreasureList.size(); i++) {
+            Treasure treasure = mTreasureList.get(i);
+            if (TextUtils.equals(treasureId, treasure.id)) {
+                double lng = treasure.locations[0];
+                double lat = treasure.locations[1];
+                latLng = new LatLng(lat, lng);
+                return latLng;
+            }
+        }
+        return null;
+    }
+
     private void getTreasurelist() {
         if (locateLatLng != null) {
             rippleAnimationView.startRippleAnimation();
-            double[] d = new double[]{locateLatLng.latitude, locateLatLng.longitude};
+            double[] d = new double[]{locateLatLng.longitude, locateLatLng.latitude};
             TreasureListParam param = new TreasureListParam(d);
             TreasureApi.getInstance()
                     .getTreasurelist(mActivityId, param)
@@ -123,15 +141,20 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
                             //draw markers
                             for (int i = 0; i < mTreasureListEntities.size(); i++) {
                                 Treasure treasure = new Treasure();
-                                treasure.locations[0] = mTreasureListEntities.get(i).getLocation().get(0);
-                                treasure.locations[1] = mTreasureListEntities.get(i).getLocation().get(1);
-                                treasure.id = mTreasureListEntities.get(i).getId();
+                                TreasureListEntity.DataBean bean=mTreasureListEntities.get(i);
+                                treasure.locations[0] =bean.getLocation().get(0);
+                                treasure.locations[1] =bean.getLocation().get(1);
+                                treasure.id = bean.getId();
+                                treasure.question=bean.getQuestion();
+                                treasure.answer=bean.getAnswer();
+                                treasure.imagePath=bean.getImage();
+                                treasure.content=bean.getContent();
                                 mTreasureList.add(treasure);
-                                LatLng latLng = new LatLng(treasure.locations[0], treasure.locations[1]);
+                                LatLng latLng = new LatLng(treasure.locations[1], treasure.locations[0]);
 //                                double latitude = mTreasureListEntities.get(i).getLocation().get(0);
 //                                double longitude = mTreasureListEntities.get(i).getLocation().get(1);
 //                                LatLng latLng = new LatLng(latitude, longitude);
-                                MarkerDrawer.drawMarker(SearchTreasureActivity.this, aMap, latLng);
+                                MarkerDrawer.drawMarker(SearchTreasureActivity.this, aMap, latLng, treasure.id);
                             }
                         }
 
@@ -143,7 +166,12 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
                         @Override
                         public void onCompleted() {
                             super.onCompleted();
-                            rippleAnimationView.stopRippleAnimation();
+                            new Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    rippleAnimationView.stopRippleAnimation();
+                                }
+                            }, 1000);
                         }
                     });
         }
@@ -152,7 +180,7 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
     private void verifyOrOpen(LatLng latLng) {
         Treasure treasure = null;
         for (int i = 0; i < mTreasureList.size(); i++) {
-            if (mTreasureList.get(i).locations[0] == latLng.latitude && mTreasureList.get(i).locations[1] == latLng.longitude) {
+            if (mTreasureList.get(i).locations[0] == latLng.longitude && mTreasureList.get(i).locations[1] == latLng.latitude) {
                 treasure = mTreasureList.get(i);
                 break;
             }
@@ -164,9 +192,11 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
         if (!TextUtils.isEmpty(treasure.question)) {
             Intent intent = new Intent(this, OpenTreasureActivity.class);
             intent.putExtra("treasure", treasure);
-            startActivityForResult(intent, REQUSER_CODE_QUESTION);
+            startActivity(intent);
         } else {
-            TreasureDetailDialogFragment.newInstance(treasure).show(getSupportFragmentManager(), "dialog");
+            Intent intent = new Intent(this, TreasureDetailActivity.class);
+            intent.putExtra("treasure", treasure);
+            startActivity(intent);
         }
     }
 
@@ -216,7 +246,7 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
             aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
             isFirst = false;
         }
-        Log.d("yzp", "  " + location.getLatitude() + "    " + location.getLongitude());
+        Log.d("yzp", "  " + location.getLatitude() + location.getLongitude() + "    ");
     }
 
 

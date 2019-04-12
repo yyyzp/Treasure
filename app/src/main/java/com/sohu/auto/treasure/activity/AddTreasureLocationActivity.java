@@ -70,7 +70,7 @@ public class AddTreasureLocationActivity extends RxAppCompatActivity implements 
     private void getLocation(LatLng latLng) {
         geocoderSearch = new GeocodeSearch(this);
         // 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
-        LatLonPoint latLonPoint = new LatLonPoint(latLng.latitude, latLng.longitude);
+        LatLonPoint latLonPoint = new LatLonPoint(latLng.longitude, latLng.latitude);
         RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 50, GeocodeSearch.AMAP);
         geocoderSearch.getFromLocationAsyn(query);
         geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
@@ -140,6 +140,6 @@ public class AddTreasureLocationActivity extends RxAppCompatActivity implements 
         aMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
         aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
         mCenterMarker = MarkerDrawer.drawCenterMarker(this, aMap, latLng);
-        Log.d("yzp", "  " + location.getLatitude() + "    " + location.getLongitude());
+        Log.d("yzp", "  " + location.getLongitude() + "    " + location.getLatitude());
     }
 }
