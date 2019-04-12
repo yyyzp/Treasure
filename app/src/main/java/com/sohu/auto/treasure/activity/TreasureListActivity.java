@@ -52,12 +52,11 @@ public class TreasureListActivity extends RxAppCompatActivity {
     private void initView(Bundle savedInstanceState) {
         rvTreasure = findViewById(R.id.rv_treasure);
         rvTreasure.setLayoutManager(new LinearLayoutManager(this));
-        rvTreasure.addItemDecoration(new CommonItemDecoration(this, 2));
 
         mAdapter = new TreasureWatchAdapter();
         mAdapter.setOnItemClickListener((item, position) -> {
             Intent intent = new Intent(TreasureListActivity.this, TreasureDetailActivity.class);
-            intent.putExtra("treasure", data.get(position));
+            intent.putExtra("treasure", data.get(position).convertToTreasure());
             startActivity(intent);
         });
 

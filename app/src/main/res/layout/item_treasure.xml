@@ -7,7 +7,7 @@
     android:layout_marginBottom="20dp"
     apps:cardCornerRadius="8dp"
     apps:cardElevation="2dp"
-    apps:cardBackgroundColor="#0C79FB">
+    apps:cardBackgroundColor="@color/cG2">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -20,7 +20,8 @@
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
             android:textSize="22sp"
-            android:layout_toLeftOf="@+id/tv_num"
+            android:layout_toLeftOf="@+id/tv_open_man"
+            android:layout_marginRight="5dp"
             android:maxLines="1"
             android:ellipsize="end"
             tools:text="用户发布的活动" />
@@ -35,13 +36,13 @@
             tools:text="2019/04/12"/>
 
         <TextView
-            android:id="@+id/tv_num"
+            android:id="@+id/tv_open_man"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            tools:text="10个宝藏"/>
+            tools:text="aiyou"/>
 
     </RelativeLayout>
 

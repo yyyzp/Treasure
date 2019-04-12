@@ -47,9 +47,14 @@
             android:name="com.amap.api.v2.apikey"
             android:value="f240a2684f6b1e766f35be935344f9e6" />
 
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.1" />
 
-        <activity android:name=".activity.MainActivity"
-            android:icon="@drawable/logo">
+
+        <activity
+            android:name=".activity.MainActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -57,14 +62,15 @@
         </activity>
         <activity android:name=".activity.SearchTreasureActivity" />
         <activity android:name=".activity.AddTreasureLocationActivity" />
-        <activity android:name=".activity.CreateTreasureActivity"
-            android:launchMode="singleTop"/>
+        <activity
+            android:name=".activity.CreateTreasureActivity"
+            android:launchMode="singleTop" />
         <activity android:name=".activity.CreateTreasureAddActivity" />
         <activity android:name=".activity.CreateTreasureAddDetailActivity" />
         <activity android:name=".activity.OpenTreasureActivity" />
-        <activity android:name=".activity.MyPublishedActivity"/>
-        <activity android:name=".activity.MyJoinActivity"/>
-        <activity android:name=".activity.TreasureListActivity"/>
-        <activity android:name=".activity.TreasureDetailActivity"/>
+        <activity android:name=".activity.MyPublishedActivity" />
+        <activity android:name=".activity.MyJoinActivity" />
+        <activity android:name=".activity.TreasureListActivity" />
+        <activity android:name=".activity.TreasureDetailActivity" />
     </application>
 </manifest>

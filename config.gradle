@@ -17,8 +17,8 @@ ext {
             compileSdkVersion: 26,
             buildToolsVersion: "26.0.2",
             applicationId    : "com.sohu.auto.sohuauto",
-            minSdkVersion    : 17,
-            targetSdkVersion : 23,
+            minSdkVersion    : 19,
+            targetSdkVersion : 22,
             versionName      : "${versionMajor}.${versionMinor}.${versionPatch}",
             versionCode      : versionMajor * 10000 + versionMinor * 1000 + versionPatch * 100,
             javaVersion      : JavaVersion.VERSION_1_8
