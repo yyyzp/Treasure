@@ -49,7 +49,7 @@ public class OpenTreasureActivity extends RxAppCompatActivity{
     private void verify() {
         if (!TextUtils.isEmpty(etAnswer.getText())) {
             String answer = etAnswer.getText().toString().trim();
-            if (TextUtils.equals(answer, treasure.question)) {
+            if (TextUtils.equals(answer, treasure.answer)) {
                 ToastUtils.show(this, "答案正确");
                 Intent intent = new Intent(OpenTreasureActivity.this, TreasureDetailActivity.class);
                 intent.putExtra("treasure", treasure);
