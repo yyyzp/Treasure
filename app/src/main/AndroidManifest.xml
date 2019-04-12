@@ -48,27 +48,60 @@
             android:value="f240a2684f6b1e766f35be935344f9e6" />
 
         <meta-data
-            android:name = "android.max_aspect"
-            android:value="2.1"/>
+            android:name="android.max_aspect"
+            android:value="2.1" />
 
 
-        <activity android:name=".activity.MainActivity"
+        <activity
+            android:name=".activity.MainActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
             android:windowSoftInputMode="adjustPan|stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SearchTreasureActivity" />
-        <activity android:name=".activity.AddTreasureLocationActivity" />
-        <activity android:name=".activity.CreateTreasureActivity"
-            android:launchMode="singleTop"/>
-        <activity android:name=".activity.CreateTreasureAddActivity" />
-        <activity android:name=".activity.CreateTreasureAddDetailActivity" />
-        <activity android:name=".activity.OpenTreasureActivity" />
-        <activity android:name=".activity.MyPublishedActivity"/>
-        <activity android:name=".activity.MyJoinActivity"/>
-        <activity android:name=".activity.TreasureListActivity"/>
-        <activity android:name=".activity.TreasureDetailActivity"/>
+        <activity
+            android:name=".activity.SearchTreasureActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
+        <activity
+            android:name=".activity.AddTreasureLocationActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
+        <activity
+            android:name=".activity.CreateTreasureActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".activity.CreateTreasureAddActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
+        <activity
+            android:name=".activity.CreateTreasureAddDetailActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
+        <activity
+            android:name=".activity.OpenTreasureActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
+        <activity
+            android:name=".activity.MyPublishedActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
+        <activity
+            android:name=".activity.MyJoinActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
+        <activity
+            android:name=".activity.TreasureListActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
+        <activity
+            android:name=".activity.TreasureDetailActivity"
+            android:screenOrientation="portrait"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard" />
     </application>
 </manifest>

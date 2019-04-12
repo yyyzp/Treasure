@@ -70,7 +70,7 @@ public class AddTreasureLocationActivity extends RxAppCompatActivity implements 
     private void getLocation(LatLng latLng) {
         geocoderSearch = new GeocodeSearch(this);
         // 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
-        LatLonPoint latLonPoint = new LatLonPoint(latLng.longitude, latLng.latitude);
+        LatLonPoint latLonPoint = new LatLonPoint(latLng.latitude, latLng.longitude);
         RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 50, GeocodeSearch.AMAP);
         geocoderSearch.getFromLocationAsyn(query);
         geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {

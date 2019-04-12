@@ -1,6 +1,7 @@
 package com.sohu.auto.treasure.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,9 @@ import android.widget.Toast;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.TextureMapView;
+import com.amap.api.maps.UiSettings;
+import com.amap.api.maps.model.BitmapDescriptor;
+import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MyLocationStyle;
@@ -23,6 +27,7 @@ import com.sohu.auto.treasure.net.NetError;
 import com.sohu.auto.treasure.net.NetSubscriber;
 import com.sohu.auto.treasure.net.TreasureApi;
 import com.sohu.auto.treasure.utils.MarkerDrawer;
+import com.sohu.auto.treasure.utils.ToastUtils;
 import com.sohu.auto.treasure.utils.TransformUtils;
 import com.sohu.auto.treasure.widget.RippleAnimationView;
 import com.sohu.auto.treasure.widget.SHAutoActionbar;
@@ -75,6 +80,8 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
         mTextureMapView.onCreate(savedInstanceState);//初始化地图控制器对象
         if (aMap == null) {
             aMap = mTextureMapView.getMap();
+            aMap.getUiSettings().setZoomControlsEnabled(false);
+            aMap.getUiSettings().setLogoBottomMargin(-50);
             locate();
         }
         initListener();
@@ -88,14 +95,14 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
         aMap.setOnMarkerClickListener(new AMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-                if (locateLatLng == null) {
+                Log.d("yzp", "   " + marker.getDisplayLevel() + "    " + aMap.getMapScreenMarkers().size());
+
+                if (locateLatLng == null || marker.getTitle() == null) {
                     return false;
                 }
                 String treasureId = marker.getTitle();
                 LatLng markerLatLng = findTreasure(treasureId);
-//                LatLng markerLatLng = marker.getPosition();
                 float distance = MarkerDrawer.calculateLineDistance(locateLatLng, markerLatLng);
-//                Toast.makeText(SearchTreasureActivity.this, markerLatLng.longitude + "    " + markerLatLng.latitude + "     " + distance, Toast.LENGTH_LONG).show();
 
                 if (distance < 50) {
                     verifyOrOpen(markerLatLng);
@@ -130,8 +137,6 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
             TreasureApi.getInstance()
                     .getTreasurelist(mActivityId, param)
                     .compose(TransformUtils.defaultNetConfig((RxAppCompatActivity) this))
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribeOn(Schedulers.io())
                     .subscribe(new NetSubscriber<TreasureListEntity>() {
                         @Override
                         public void onSuccess(TreasureListEntity treasureListEntities) {
@@ -141,14 +146,14 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
                             //draw markers
                             for (int i = 0; i < mTreasureListEntities.size(); i++) {
                                 Treasure treasure = new Treasure();
-                                TreasureListEntity.DataBean bean=mTreasureListEntities.get(i);
-                                treasure.locations[0] =bean.getLocation().get(0);
-                                treasure.locations[1] =bean.getLocation().get(1);
+                                TreasureListEntity.DataBean bean = mTreasureListEntities.get(i);
+                                treasure.locations[0] = bean.getLocation().get(0);
+                                treasure.locations[1] = bean.getLocation().get(1);
                                 treasure.id = bean.getId();
-                                treasure.question=bean.getQuestion();
-                                treasure.answer=bean.getAnswer();
-                                treasure.imagePath=bean.getImage();
-                                treasure.content=bean.getContent();
+                                treasure.question = bean.getQuestion();
+                                treasure.answer = bean.getAnswer();
+                                treasure.imagePath = bean.getImage();
+                                treasure.content = bean.getContent();
                                 mTreasureList.add(treasure);
                                 LatLng latLng = new LatLng(treasure.locations[1], treasure.locations[0]);
 //                                double latitude = mTreasureListEntities.get(i).getLocation().get(0);
@@ -188,16 +193,34 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
         if (treasure == null) {
             return;
         }
+        Treasure finalTreasure = treasure;
+        TreasureApi.getInstance()
+                .openTreasure(treasure.id)
+                .compose(TransformUtils.defaultNetConfig((RxAppCompatActivity) this))
+                .subscribe(new NetSubscriber<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        if (getResponse().code() == 204) {
+                            if (!TextUtils.isEmpty(finalTreasure.question)) {
+                                Intent intent = new Intent(SearchTreasureActivity.this, OpenTreasureActivity.class);
+                                intent.putExtra("treasure", finalTreasure);
+                                startActivity(intent);
+                            } else if (getResponse().code() == 400) {
+                                ToastUtils.show(SearchTreasureActivity.this, "不能开启自己创建的宝箱！");
+                            } else {
+                                Intent intent = new Intent(SearchTreasureActivity.this, TreasureDetailActivity.class);
+                                intent.putExtra("treasure", finalTreasure);
+                                startActivity(intent);
+                            }
+                        }
+                    }
 
-        if (!TextUtils.isEmpty(treasure.question)) {
-            Intent intent = new Intent(this, OpenTreasureActivity.class);
-            intent.putExtra("treasure", treasure);
-            startActivity(intent);
-        } else {
-            Intent intent = new Intent(this, TreasureDetailActivity.class);
-            intent.putExtra("treasure", treasure);
-            startActivity(intent);
-        }
+                    @Override
+                    public void onFailure(NetError error) {
+
+                    }
+                });
+
     }
 
     private void locate() {
@@ -205,6 +228,9 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
         myLocationStyle = new MyLocationStyle();//初始化定位蓝点样式类myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATION_ROTATE);//连续定位、且将视角移动到地图中心点，定位点依照设备方向旋转，并且会跟随设备移动。（1秒1次定位）如果不设置myLocationType，默认也会执行此种模式。
 //        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_SHOW);//只定位一次。
         myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_FOLLOW_NO_CENTER);//连续定位、蓝点不会移动到地图中心点，并且蓝点会跟随设备移动。
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_locate2));
+        myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
+        myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
         myLocationStyle.interval(5000); //设置连续定位模式下的定位间隔，只在连续定位模式下生效，单次定位模式下不会生效。单位为毫秒。
         aMap.setMyLocationStyle(myLocationStyle);//设置定位蓝点的Style
         aMap.getUiSettings().setMyLocationButtonEnabled(false);//设置默认定位按钮是否显示，非必需设置。
@@ -243,11 +269,10 @@ public class SearchTreasureActivity extends RxAppCompatActivity implements AMap.
         locateLatLng = new LatLng(location.getLatitude(), location.getLongitude());
         if (isFirst) {
             aMap.moveCamera(CameraUpdateFactory.newLatLng(locateLatLng));
-            aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
+            aMap.moveCamera(CameraUpdateFactory.zoomTo(18));
             isFirst = false;
         }
         Log.d("yzp", "  " + location.getLatitude() + location.getLongitude() + "    ");
     }
-
 
 }
